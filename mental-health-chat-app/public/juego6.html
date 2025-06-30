@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encuentra el Animal</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .animal-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .animal {
+      width: 100px;
+      height: 100px;
+      background-color: lightgray;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Encuentra el Animal</h2>
+  <p>Haz clic en el animal correcto.</p>
+  <p id="targetAnimal"></p>
+  <div class="animal-container" id="animalContainer"></div>
+  <p id="feedback"></p>
+  <script>
+    const animals = ["🐶", "🐱", "🐮", "🐷"];
+    const targetAnimal = document.getElementById("targetAnimal");
+    const animalContainer = document.getElementById("animalContainer");
+    const feedback = document.getElementById("feedback");
+
+    function setGame() {
+      feedback.textContent = "";
+      const shuffled = animals.sort(() => 0.5 - Math.random());
+      const correctAnimal = shuffled[Math.floor(Math.random() * shuffled.length)];
+      targetAnimal.textContent = `Encuentra el: ${correctAnimal}`;
+      animalContainer.innerHTML = "";
+
+      shuffled.forEach(animal => {
+        const div = document.createElement("div");
+        div.className = "animal";
+        div.textContent = animal;
+        div.addEventListener("click", () => {
+          if (animal === correctAnimal) {
+            feedback.textContent = "¡Correcto!";
+            setTimeout(setGame, 1000);
+          } else {
+            feedback.textContent = "Intenta de nuevo.";
+          }
+        });
+        animalContainer.appendChild(div);
+      });
+    }
+
+    setGame();
+  </script>
+</body>
+</html>

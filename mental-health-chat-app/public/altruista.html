@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pequeños Actos, Grandes Cambios - Cuida Tu Mente</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* === ESTILO BASE CUIDA TU MENTE === */
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f8f3ff 0%, #fff5f8 50%, #f0f8ff 100%);
+            color: #4a4a4a;
+            min-height: 100vh;
+        }
+
+        /* Formas flotantes animadas */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            background: #c7b8ea;
+            top: 10%;
+            left: 10%;
+        }
+
+        .shape:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            background: #ffb3d9;
+            top: 60%;
+            right: 15%;
+            animation-delay: 5s;
+        }
+
+        .shape:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            background: #a8d8ea;
+            top: 30%;
+            right: 25%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-40px) rotate(180deg); }
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(199, 184, 234, 0.3);
+        }
+
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #8b7ab8 !important;
+        }
+
+        .navbar-nav .nav-link {
+            color: #6b5b95 !important;
+            font-weight: 500;
+            padding: 10px 15px !important;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            background: rgba(199, 184, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Títulos principales */
+        .main-title {
+            font-size: 3rem;
+            color: #8b7ab8;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #6b5b95;
+            text-align: center;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Contenedores principales */
+        .main-container {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 20px 40px rgba(199, 184, 234, 0.2);
+        }
+
+        /* Tarjetas de acciones */
+        .action-card {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(199, 184, 234, 0.5);
+            box-shadow: 0 15px 30px rgba(199, 184, 234, 0.3);
+        }
+
+        .action-card.selected {
+            border-color: #c7b8ea;
+            background: rgba(199, 184, 234, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 179, 217, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .action-card:hover::before {
+            left: 100%;
+        }
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #c7b8ea, #a8d8ea);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .action-title {
+            color: #6b5b95;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .action-description {
+            color: #4a4a4a;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        /* Ruleta */
+        .wheel-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 40px 0;
+        }
+
+        .wheel {
+            width: 300px;
+            height: 300px;
+            border: 10px solid #c7b8ea;
+            border-radius: 50%;
+            position: relative;
+            background: conic-gradient(
+                from 0deg,
+                #c7b8ea 0deg 36deg,
+                #ffb3d9 36deg 72deg,
+                #a8d8ea 72deg 108deg,
+                #e6c79c 108deg 144deg,
+                #b5d3b5 144deg 180deg,
+                #f0c4d8 180deg 216deg,
+                #d4b5f0 216deg 252deg,
+                #ffd1a3 252deg 288deg,
+                #b3e0e6 288deg 324deg,
+                #e8b8d6 324deg 360deg
+            );
+            transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            box-shadow: 0 10px 30px rgba(199, 184, 234, 0.3);
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #6b5b95;
+            z-index: 10;
+        }
+
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: #6b5b95;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            z-index: 5;
+        }
+
+        /* Bloc de notas */
+        .notebook-container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 15px 35px rgba(199, 184, 234, 0.2);
+            border: 2px solid rgba(199, 184, 234, 0.3);
+        }
+
+        .notebook-title {
+            color: #8b7ab8;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .notebook-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 20px;
+            border: 2px solid rgba(199, 184, 234, 0.3);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            font-family: 'Georgia', serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #4a4a4a;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .notebook-textarea:focus {
+            outline: none;
+            border-color: #c7b8ea;
+            box-shadow: 0 0 20px rgba(199, 184, 234, 0.3);
+        }
+
+        .notebook-textarea::placeholder {
+            color: #8b7ab8;
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        /* Mensajes motivacionales */
+        .motivation-card {
+            background: linear-gradient(45deg, rgba(199, 184, 234, 0.1), rgba(255, 179, 217, 0.1));
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #c7b8ea;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .motivation-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .motivation-text {
+            color: #6b5b95;
+            font-size: 1rem;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        /* Sección de cierre */
+        .closing-section {
+            background: rgba(168, 216, 234, 0.2);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid rgba(168, 216, 234, 0.3);
+            margin-top: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+
+        .closing-section.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .closing-title {
+            color: #6b5b95;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .closing-text {
+            color: #4a4a4a;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* Botones principales */
+        .cta-button {
+            background: linear-gradient(45deg, #c7b8ea, #ffb3d9);
+            color: white;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(199, 184, 234, 0.4);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(199, 184, 234, 0.6);
+            color: white;
+            text-decoration: none;
+        }
+
+        .cta-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Estados de visibilidad */
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(107, 91, 149, 0.1);
+            padding: 40px 0;
+            text-align: center;
+            color: #6b5b95;
+            border-top: 1px solid rgba(199, 184, 234, 0.3);
+        }
+
+        /* Animaciones */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .fade-in-delay {
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.2rem;
+            }
+            
+            .main-container {
+                padding: 25px;
+            }
+            
+            .action-card {
+                padding: 20px;
+            }
+
+            .wheel {
+                width: 250px;
+                height: 250px;
+            }
+
+            .notebook-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- Header -->
+        <header>
+            <nav class="navbar navbar-expand-lg">
+                <div class="container">
+                    <a class="navbar-brand" href="index.html">
+                        <i class="fas fa-heart"></i> Cuida Tu Mente
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.html">Inicio</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#que-es">¿Qué es?</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#autocuidado">Autocuidado</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="test.html">Test</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#recursos">Recursos</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Contenido principal -->
+        <main class="container py-5">
+            <h1 class="main-title fade-in">
+                <i class="fas fa-hands-helping"></i>
+                Pequeños Actos, Grandes Cambios
+            </h1>
+            
+            <div class="subtitle fade-in-delay">
+                A veces, las acciones más simples son las que más sanan. Cuando extendemos una mano amiga o realizamos un gesto de bondad, no solo aliviamos la carga de otros, sino que también nutrimos nuestra propia alma. Cada pequeño acto altruista es una semilla de bienestar que florece tanto en quien la recibe como en quien la siembra. Tu corazón tiene el poder de crear ondas de amor que se expanden más allá de lo que puedes imaginar.
+            </div>
+
+            <!-- Paso 1: Elección de acción -->
+            <div id="step1" class="step active">
+                <div class="main-container">
+                    <h2 class="text-center mb-4" style="color: #8b7ab8;">
+                        <i class="fas fa-star"></i> Elige Tu Acción de Hoy
+                    </h2>
+                    
+                    <div class="text-center mb-4">
+                        <button class="cta-button me-3" onclick="showWheel()">
+                            <i class="fas fa-random"></i> Sorpréndeme con la Ruleta
+                        </button>
+                        <button class="cta-button" onclick="showActions()">
+                            <i class="fas fa-list"></i> Ver Todas las Opciones
+                        </button>
+                    </div>
+
+                    <!-- Ruleta -->
+                    <div id="wheelSection" style="display: none;">
+                        <div class="wheel-container">
+                            <div class="wheel-pointer"></div>
+                            <div class="wheel" id="wheel">
+                                <div class="wheel-center">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                            </div>
+                            <button class="cta-button mt-3" onclick="spinWheel()" id="spinButton">
+                                <i class="fas fa-play"></i> Girar la Ruleta
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Lista de acciones -->
+                    <div id="actionsSection" style="display: none;">
+                        <div class="row" id="actionsList">
+                            <!-- Las acciones se generarán dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Acción seleccionada -->
+                    <div id="selectedActionSection" style="display: none;">
+                        <div class="text-center">
+                            <div class="action-card selected mx-auto" style="max-width: 500px;" id="selectedActionCard">
+                                <!-- La acción seleccionada se mostrará aquí -->
+                            </div>
+                            <button class="cta-button mt-3" onclick="goToReflection()">
+                                <i class="fas fa-arrow-right"></i> Continuar a la Reflexión
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Paso 2: Bloc de notas para reflexión -->
+            <div id="step2" class="step">
+                <div class="notebook-container">
+                    <div class="notebook-title">
+                        <i class="fas fa-feather-alt"></i> Espacio para tus Reflexiones
+                    </div>
+                    <p class="text-center" style="color: #6b5b95; margin-bottom: 20px;">
+                        Tómate un momento para escribir tus pensamientos, sentimientos o cualquier cosa que tengas en el corazón después de realizar esta acción...
+                    </p>
+                    <textarea 
+                        class="notebook-textarea" 
+                        id="reflectionText"
+                        placeholder="¿Cómo te sientes? ¿Qué pensamientos tienes? ¿Qué significó esta acción para ti? No hay respuestas correctas o incorrectas, solo escribe desde el corazón..."
+                    ></textarea>
+                    <div class="text-center mt-3">
+                        <button class="cta-button" onclick="showMotivation()">
+                            <i class="fas fa-heart"></i> Ver Mensaje Inspirador
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Paso 3: Mensajes motivacionales -->
+            <div id="step3" class="step">
+                <div class="main-container">
+                    <h2 class="text-center mb-4" style="color: #8b7ab8;">
+                        <i class="fas fa-heart"></i> El Poder de Tu Acción
+                    </h2>
+                    
+                    <div id="motivationMessages">
+                        <!-- Los mensajes se mostrarán dinámicamente -->
+                    </div>
+
+                    <div class="closing-section" id="closingMessage">
+                        <div class="closing-title">
+                            <i class="fas fa-infinity"></i> Tu Acción de Hoy, Tu Bienestar de Siempre
+                        </div>
+                        <div class="closing-text" id="closingText">
+                            <!-- El mensaje de cierre se personalizará según la acción -->
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button class="cta-button" onclick="resetToBeginning()">
+                            <i class="fas fa-refresh"></i> Realizar Otra Acción
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="container">
+                <p>&copy; 2025 Cuida Tu Mente. Comprometidos con tu bienestar mental.</p>
+                <p><i class="fas fa-heart" style="color: #ffb3d9;"></i> Porque cada acto de amor cuenta <i class="fas fa-heart" style="color: #ffb3d9;"></i></p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Datos de las acciones
+        const actions = [
+            {
+                icon: 'fas fa-envelope',
+                title: 'Envía un mensaje de cariño',
+                description: 'Escribe a esa persona que hace tiempo no contactas. Un simple "estaba pensando en ti" puede iluminar su día completo.',
+                messages: [
+                    'Tu mensaje puede ser exactamente lo que esa persona necesitaba escuchar hoy. A veces, saber que alguien piensa en nosotros es el regalo más hermoso.',
+                    'Al reconectar con otros, también reconectas contigo mismo. Cada mensaje de cariño fortalece los lazos que nos hacen humanos.',
+                    'Has plantado una semilla de alegría en el corazón de alguien más. Esa sonrisa que provocaste tiene un valor incalculable.',
+                    'La distancia física no puede romper los puentes del corazón. Tu gesto de amor trasciende cualquier barrera.',
+                    'En un mundo acelerado, te tomaste el tiempo para hacer sentir especial a alguien. Eso habla de la belleza de tu alma.'
+                ],
+                closing: 'Tu mensaje no solo alegró el día de alguien más, también nutró tu propia capacidad de amar y conectar. Los vínculos que cultivas son medicina para tu corazón.'
+            },
+            {
+                icon: 'fas fa-ear-listen',
+                title: 'Escucha sin juzgar',
+                description: 'Ofrece tu presencia completa a alguien que necesita ser escuchado. A veces, el regalo más valioso es simplemente estar ahí.',
+                messages: [
+                    'Tu escucha atenta fue un bálsamo para alguien que necesitaba sentirse comprendido. Has ofrecido uno de los regalos más preciados: tu tiempo y atención.',
+                    'Al escuchar sin juzgar, creaste un espacio sagrado donde alguien pudo ser auténtico. Eso es un acto de amor profundo.',
+                    'Tu presencia silenciosa habló más fuerte que mil palabras. A veces, ser testigo del dolor de otros es la forma más pura de sanación.',
+                    'Has demostrado que el arte de escuchar es también el arte de amar. Tu corazón abierto fue refugio para alguien más.',
+                    'En tu silencio respetuoso, alguien encontró la valentía de expresar lo que llevaba guardado. Fuiste facilitador de su liberación emocional.'
+                ],
+                closing: 'Al ofrecer tu escucha, no solo sanaste a otro, también desarrollaste tu capacidad de empatía y comprensión. Tu alma se expandió al acoger la experiencia de alguien más.'
+            },
+            {
+                icon: 'fas fa-smile',
+                title: 'Comparte una sonrisa genuina',
+                description: 'Sonríe a un desconocido, al vecino, al empleado de la tienda. Una sonrisa auténtica puede cambiar el rumbo del día de alguien.',
+                messages: [
+                    'Tu sonrisa fue como un rayo de sol en un día nublado para alguien. Los gestos más simples a menudo tienen el impacto más profundo.',
+                    'Al sonreír genuinamente, activaste una reacción en cadena de positividad. Tu alegría se volvió contagiosa y se expandió más allá de lo visible.',
+                    'En tu sonrisa, alguien vio esperanza. A veces, un gesto tan simple puede recordarle a una persona que el mundo aún tiene belleza.',
+                    'Has demostrado que la felicidad compartida se multiplica. Tu sonrisa no solo alegró a otros, también iluminó tu propio corazón.',
+                    'Tu sonrisa auténtica fue un mensaje silencioso que decía: "No estás solo en este mundo". Eso tiene un poder transformador inmenso.'
+                ],
+                closing: 'Cada sonrisa que regalas regresa a ti multiplicada. Has elegido ser portador de luz y alegría, y eso nutre tu propia felicidad de formas profundas e invisibles.'
+            },
+            {
+                icon: 'fas fa-thumbs-up',
+                title: 'Reconoce el esfuerzo de otros',
+                description: 'Agradece al personal de limpieza, al conductor del autobús, o a quien te atiende. El reconocimiento alimenta el alma.',
+                messages: [
+                    'Tu reconocimiento dignificó el trabajo de alguien que quizás pasa desapercibido. Has visto y valorado lo invisible, y eso es un regalo extraordinario.',
+                    'Al agradecer genuinamente, recordaste a alguien que su labor tiene valor y propósito. Esa validación puede cambiar toda su perspectiva del día.',
+                    'Tu gratitud fue como agua fresca para alguien que trabaja incansablemente. Has nutrido su motivación y renovado su sentido de propósito.',
+                    'En tu reconocimiento, alguien se sintió visto y apreciado. Has devuelto la dignidad a un trabajo que la sociedad a veces olvida valorar.',
+                    'Tu gesto de gratitud creó un momento de conexión humana real en medio de interacciones rutinarias. Eso transforma lo ordinario en extraordinario.'
+                ],
+                closing: 'Al reconocer el valor en el trabajo de otros, también honras tu propia capacidad de ver la belleza en lo cotidiano. Tu gratitud cultiva una perspectiva más rica y apreciativa de la vida.'
+            },
+            {
+                icon: 'fas fa-share-alt',
+                title: 'Comparte algo que te inspira',
+                description: 'Una canción, un poema, una frase que te tocó el corazón. Compartir belleza multiplica la alegría en el mundo.',
+                messages: [
+                    'Al compartir lo que te inspira, has sido canal de belleza y esperanza. Tu sensibilidad para apreciar y transmitir lo hermoso enriquece el mundo.',
+                    'Tu compartir generoso puede haber despertado emociones dormidas en alguien más. El arte y la belleza que compartes son semillas de transformación.',
+                    'Has demostrado que la inspiración crece cuando se comparte. Al ofrecer lo que te conmueve, multiplicas la capacidad de asombro en otros.',
+                    'Tu gesto de compartir belleza es un acto de resistencia contra la negatividad del mundo. Eliges ser propagador de luz y esperanza.',
+                    'En lo que compartiste, alguien pudo encontrar exactamente lo que necesitaba escuchar, ver o sentir. Fuiste instrumento de sincronicidad y magia.'
+                ],
+                closing: 'Compartir lo que te inspira no solo enriquece a otros, también refuerza tu propia conexión con la belleza. Te conviertes en un curador de momentos hermosos para tu alma y las de otros.'
+            },
+            {
+                icon: 'fas fa-hands',
+                title: 'Ofrece ayuda práctica',
+                description: 'Ayuda a cargar bolsas, cede tu lugar en la fila, o sostén la puerta. Los gestos pequeños construyen un mundo más amable.',
+                messages: [
+                    'Tu ayuda práctica aligeró no solo una carga física, sino también emocional. Has demostrado que la bondad se manifiesta en acciones concretas.',
+                    'Al ofrecer ayuda sin que te la pidieran, mostraste una sensibilidad hermosa hacia las necesidades de otros. Esa intuición compasiva es un don.',
+                    'Tu gesto simple pero significativo recordó a alguien que la humanidad aún existe. En un mundo que a veces parece frío, fuiste calidez pura.',
+                    'Has demostrado que los héroes cotidianos existen y que tú eres uno de ellos. Tu ayuda desinteresada hace de este mundo un lugar más habitable.',
+                    'Tu acción práctica fue una oración en movimiento, una manifestación tangible de amor hacia el prójimo. Eso trasciende cualquier palabra.'
+                ],
+                closing: 'Cada vez que ofreces ayuda práctica, ejercitas tu músculo de la compasión. Te fortaleces como ser humano y construyes un mundo donde todos cuidamos de todos.'
+            },
+            {
+                icon: 'fas fa-comment-dots',
+                title: 'Haz un cumplido sincero',
+                description: 'Reconoce algo genuinamente positivo en alguien más. Las palabras amables tienen el poder de sanar heridas invisibles.',
+                messages: [
+                    'Tu cumplido sincero puede haber sanado una herida invisible que ni siquiera conocías. Las palabras amables tienen un poder transformador profundo.',
+                    'Al expresar genuinamente lo positivo que ves en otros, reflejas la belleza que también habita en ti. Tu capacidad de ver lo bueno es un regalo.',
+                    'Tu reconocimiento verbal puede haber cambiado la percepción que alguien tiene de sí mismo. Has plantado una semilla de autoestima y confianza.',
+                    'En tu cumplido auténtico, alguien se sintió visto y valorado en su esencia. Eso puede marcar la diferencia entre un día gris y uno luminoso.',
+                    'Has demostrado que las palabras pueden ser medicina. Tu cumplido sincero fue como un abrazo verbal que llegó justo cuando era necesario.'
+                ],
+                closing: 'Al ofrecer cumplidos sinceros, no solo elevas a otros, también entrenas tu mente para ver lo positivo. Desarrollas una perspectiva más optimista y generosa que enriquece tu propia experiencia de vida.'
+            },
+            {
+                icon: 'fas fa-heart',
+                title: 'Perdona en silencio',
+                description: 'Libérate del resentimiento hacia alguien, aunque sea solo en tu corazón. El perdón es un regalo que te das a ti mismo.',
+                messages: [
+                    'Tu perdón silencioso liberó cadenas invisibles que llevabas cargando. Has elegido la libertad emocional sobre el peso del resentimiento.',
+                    'Al perdonar en tu corazón, has realizado uno de los actos más valientes y sanadores posibles. El perdón requiere una fuerza interior extraordinaria.',
+                    'Tu decisión de soltar el rencor creó espacio en tu corazón para la paz. Has elegido tu bienestar emocional sobre el deseo de justicia.',
+                    'En tu perdón silencioso hay una sabiduría profunda: entiendes que aferrarse al dolor solo prolonga tu sufrimiento. Esa comprensión es liberadora.',
+                    'Has demostrado que el perdón no es debilidad, sino la expresión más pura de tu poder personal. Elegiste sanar en lugar de seguir herido.'
+                ],
+                closing: 'El perdón que cultivas en silencio es medicina para tu alma. Al soltar resentimientos, creas espacio para la paz, la alegría y relaciones más saludables en tu vida.'
+            },
+            {
+                icon: 'fas fa-lightbulb',
+                title: 'Comparte un conocimiento útil',
+                description: 'Enseña algo que sabes hacer bien a alguien que muestre interés. El conocimiento compartido es un legado de generosidad.',
+                messages: [
+                    'Al compartir tu conocimiento, has plantado semillas de crecimiento en la mente de alguien más. Enseñar es uno de los actos más generosos del alma.',
+                    'Tu sabiduría compartida puede abrir nuevas posibilidades en la vida de otra persona. Has sido facilitador de su desarrollo y expansión.',
+                    'En tu enseñanza desinteresada, alguien vio no solo conocimiento, sino también tu generosidad de espíritu. Enseñar con amor transforma tanto al maestro como al estudiante.',
+                    'Has demostrado que el conocimiento crece cuando se comparte. Al enseñar lo que sabes, multiplicas la sabiduría disponible en el mundo.',
+                    'Tu disposición para enseñar revela la abundancia de tu corazón. Entiendes que compartir conocimiento no te empobrece, sino que enriquece a todos.'
+                ],
+                closing: 'Cada vez que compartes conocimiento, honras la cadena de maestros que te precedieron y te conviertes en eslabón de sabiduría para otros. Tu legado se construye en lo que enseñas con amor.'
+            },
+            {
+                icon: 'fas fa-seedling',
+                title: 'Cuida algo vivo',
+                description: 'Riega una planta, alimenta a un animal callejero, o cuida un jardín comunitario. Nutrir la vida nos conecta con nuestra esencia bondadosa.',
+                messages: [
+                    'Al cuidar la vida, honras la interconexión sagrada que existe entre todos los seres. Tu gesto nutre no solo a otro ser vivo, sino tu propia alma.',
+                    'Tu acto de cuidado hacia la vida refleja la belleza de tu corazón compasivo. Has elegido ser guardián y protector de la existencia misma.',
+                    'En tu gesto de nutrir la vida, te conectas con el impulso más puro del universo: el deseo de que todo florezca y prospere.',
+                    'Has demostrado que el amor se extiende más allá de lo humano. Tu capacidad de cuidar toda forma de vida revela la amplitud de tu compasión.',
+                    'Al alimentar la vida, te alimentas a ti mismo espiritualmente. Cada acto de cuidado hacia otros seres vivos enriquece tu propia vitalidad interior.'
+                ],
+                closing: 'Cuidar la vida en todas sus formas te conecta con tu propósito más profundo como ser humano. En cada acto de protección y cuidado, despiertas la parte más noble de tu esencia.'
+            }
+        ];
+
+        let selectedAction = null;
+        let isSpinning = false;
+
+        // Mostrar la ruleta
+        function showWheel() {
+            document.getElementById('wheelSection').style.display = 'block';
+            document.getElementById('actionsSection').style.display = 'none';
+        }
+
+        // Mostrar lista de acciones
+        function showActions() {
+            document.getElementById('actionsSection').style.display = 'block';
+            document.getElementById('wheelSection').style.display = 'none';
+            generateActionsList();
+        }
+
+        // Generar lista de acciones
+        function generateActionsList() {
+            const container = document.getElementById('actionsList');
+            container.innerHTML = '';
+            
+            actions.forEach((action, index) => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 mb-3';
+                
+                col.innerHTML = `
+                    <div class="action-card" onclick="selectAction(${index})">
+                        <div class="action-icon">
+                            <i class="${action.icon}"></i>
+                        </div>
+                        <div class="action-title">${action.title}</div>
+                        <div class="action-description">${action.description}</div>
+                    </div>
+                `;
+                
+                container.appendChild(col);
+            });
+        }
+
+        // Seleccionar acción manualmente
+        function selectAction(index) {
+            selectedAction = actions[index];
+            showSelectedAction();
+        }
+
+        // Girar la ruleta
+        function spinWheel() {
+            if (isSpinning) return;
+            
+            isSpinning = true;
+            const button = document.getElementById('spinButton');
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Girando...';
+            
+            const wheel = document.getElementById('wheel');
+            const randomIndex = Math.floor(Math.random() * actions.length);
+            const degrees = 360 * 5 + (randomIndex * 36); // 5 vueltas completas + posición final
+            
+            wheel.style.transform = `rotate(${degrees}deg)`;
+            
+            setTimeout(() => {
+                selectedAction = actions[randomIndex];
+                showSelectedAction();
+                isSpinning = false;
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-play"></i> Girar Otra Vez';
+            }, 3000);
+        }
+
+        // Mostrar acción seleccionada
+        function showSelectedAction() {
+            const card = document.getElementById('selectedActionCard');
+            card.innerHTML = `
+                <div class="action-icon">
+                    <i class="${selectedAction.icon}"></i>
+                </div>
+                <div class="action-title">${selectedAction.title}</div>
+                <div class="action-description">${selectedAction.description}</div>
+            `;
+            
+            document.getElementById('wheelSection').style.display = 'none';
+            document.getElementById('actionsSection').style.display = 'none';
+            document.getElementById('selectedActionSection').style.display = 'block';
+        }
+
+        // Ir a la reflexión
+        function goToReflection() {
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+        }
+
+        // Mostrar mensajes motivacionales
+        function showMotivation() {
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step3').classList.add('active');
+            
+            const container = document.getElementById('motivationMessages');
+            container.innerHTML = '';
+            
+            // Mostrar los 5 mensajes específicos de la acción
+            selectedAction.messages.forEach((message, index) => {
+                const card = document.createElement('div');
+                card.className = 'motivation-card';
+                card.innerHTML = `<div class="motivation-text">${message}</div>`;
+                container.appendChild(card);
+                
+                // Animación escalonada
+                setTimeout(() => {
+                    card.classList.add('show');
+                }, index * 200);
+            });
+            
+            // Mostrar mensaje de cierre personalizado
+            setTimeout(() => {
+                document.getElementById('closingText').textContent = selectedAction.closing;
+                document.getElementById('closingMessage').classList.add('show');
+            }, selectedAction.messages.length * 200 + 500);
+        }
+
+        // Reiniciar al inicio
+        function resetToBeginning() {
+            // Ocultar todos los pasos
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Mostrar primer paso
+            document.getElementById('step1').classList.add('active');
+            
+            // Resetear elementos
+            document.getElementById('wheelSection').style.display = 'none';
+            document.getElementById('actionsSection').style.display = 'none';
+            document.getElementById('selectedActionSection').style.display = 'none';
+            document.getElementById('reflectionText').value = '';
+            document.getElementById('closingMessage').classList.remove('show');
+            
+            // Resetear ruleta
+            const wheel = document.getElementById('wheel');
+            wheel.style.transform = 'rotate(0deg)';
+            
+            // Resetear variables
+            selectedAction = null;
+            isSpinning = false;
+            
+            const button = document.getElementById('spinButton');
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-play"></i> Girar la Ruleta';
+        }
+    </script>
+</body>
+</html>

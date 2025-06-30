@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adivina el Número</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background-color: #2e003e;
+      color: white;
+    }
+    button {
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ab47bc;
+    }
+    #result {
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h2>Adivina el Número</h2>
+  <p id="instructions">Adivina el número entre <span id="range"></span></p>
+  <input type="number" id="guess" placeholder="Ingresa tu suposición" />
+  <button onclick="checkGuess()">Adivinar</button>
+  <p id="result"></p>
+  <p>Intentos restantes: <span id="attempts"></span></p>
+  <button id="restartBtn" class="hidden" onclick="startGame()">Reiniciar Juego</button>
+
+  <script>
+    let targetNumber;
+    let attempts;
+    let level = 1;
+    let maxLevel = 10;
+    const rangeDiv = document.getElementById("range");
+    const attemptsDiv = document.getElementById("attempts");
+    const resultDiv = document.getElementById("result");
+    const guessInput = document.getElementById("guess");
+    const restartBtn = document.getElementById("restartBtn");
+
+    function startGame() {
+      level = 1;
+      attempts = 3;
+      document.getElementById("guess").value = "";
+      resultDiv.textContent = "";
+      restartBtn.classList.add("hidden");
+      nextLevel();
+    }
+
+    function nextLevel() {
+      const range = level * 10;
+      targetNumber = Math.floor(Math.random() * range) + 1;
+      rangeDiv.textContent = `1 y ${range}`;
+      attemptsDiv.textContent = attempts;
+
+      guessInput.disabled = false;
+      document.getElementById("result").textContent = "";
+    }
+
+    function checkGuess() {
+      const guess = parseInt(guessInput.value);
+
+      if (isNaN(guess)) {
+        resultDiv.textContent = "Por favor ingresa un número válido.";
+        return;
+      }
+
+      if (guess === targetNumber) {
+        resultDiv.textContent = `¡Correcto! Has adivinado el número.`;
+        level++;
+        if (level <= maxLevel) {
+          setTimeout(nextLevel, 2000);
+        } else {
+          resultDiv.textContent = "¡Felicidades! Has completado todos los niveles.";
+          guessInput.disabled = true;
+          restartBtn.classList.remove("hidden");
+        }
+      } else {
+        attempts--;
+        if (attempts > 0) {
+          resultDiv.textContent = "Número incorrecto. Intenta de nuevo.";
+          attemptsDiv.textContent = attempts;
+        } else {
+          resultDiv.textContent = `Has perdido. El número correcto era ${targetNumber}.`;
+          guessInput.disabled = true;
+          restartBtn.classList.remove("hidden");
+        }
+      }
+    }
+
+    startGame();
+  </script>
+</body>
+</html>

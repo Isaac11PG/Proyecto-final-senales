@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repite las Oraciones</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Repite las Oraciones</h2>
+    <!-- Botón de inicio -->
+    <button onclick="startGame()">Iniciar Juego</button>
+
+    <div id="game-container" style="display: none;">
+      <p id="level">Nivel: 1</p>
+      <p id="timer" class="timer">Tiempo restante: 15</p>
+      <p id="sentence" style="font-size: 20px;"></p>
+      <input type="text" id="userInput" placeholder="Escribe aquí la oración">
+      <div id="options">
+        <button onclick="checkSentence()">Comprobar</button>
+      </div>
+      <p id="result"></p>
+      <div id="endOptions" class="hidden">
+        <button onclick="restartGame()">Intentar de nuevo</button>
+        <button onclick="goToMain()">Página principal</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const sentences = [
+      "El perro juega en el parque",
+      "La luna brilla en el cielo",
+      "Los niños corren en la playa",
+      "Hoy hace mucho calor",
+      "Las flores crecen en primavera",
+      "El gato duerme en el sofá",
+      "Caminamos juntos al atardecer",
+      "Ella canta muy bonito",
+      "Me gusta leer por las noches",
+      "La montaña es muy alta"
+    ];
+    
+    let currentLevel = 0;
+    let timeLeft = 11; // Se ajusta el tiempo a 15 segundos
+    let timer;
+    const maxAttempts = 2;
+    let attemptsLeft = maxAttempts;
+
+    const levelDisplay = document.getElementById("level");
+    const timerDisplay = document.getElementById("timer");
+    const sentenceDisplay = document.getElementById("sentence");
+    const userInput = document.getElementById("userInput");
+    const resultDisplay = document.getElementById("result");
+    const endOptions = document.getElementById("endOptions");
+
+    function startGame() {
+      document.querySelector('button').style.display = 'none'; // Ocultar el botón de inicio
+      document.getElementById("game-container").style.display = 'block'; // Mostrar el contenido del juego
+      currentLevel = 0;
+      attemptsLeft = maxAttempts;
+      timeLeft = 15;
+      resultDisplay.textContent = "";
+      userInput.value = "";
+      endOptions.classList.add("hidden");
+      userInput.disabled = false;
+      nextLevel();
+    }
+
+    function nextLevel() {
+      if (currentLevel < sentences.length) {
+        timeLeft = 11; // Reinicia el tiempo a 15 segundos
+        timerDisplay.textContent = `Tiempo restante: ${timeLeft}`;
+        levelDisplay.textContent = `Nivel: ${currentLevel + 1}`;
+        sentenceDisplay.textContent = sentences[currentLevel];
+        setTimeout(() => sentenceDisplay.textContent = "", 5000);
+        userInput.value = "";
+        startTimer();
+      } else {
+        gameWon();
+      }
+    }
+
+    function startTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = `Tiempo restante: ${timeLeft}`;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          handleLoss();
+        }
+      }, 1000);
+    }
+
+    function checkSentence() {
+      const userSentence = userInput.value.trim().toLowerCase(); // Convierte a minúsculas
+      const correctSentence = sentences[currentLevel].toLowerCase(); // Convierte a minúsculas
+
+      if (userSentence === correctSentence) {
+        resultDisplay.textContent = "¡Correcto!";
+        clearInterval(timer);
+        currentLevel++;
+        setTimeout(nextLevel, 1000);
+      } else {
+        attemptsLeft--;
+        if (attemptsLeft > 0) {
+          resultDisplay.textContent = `Incorrecto. Te quedan ${attemptsLeft} intento(s).`;
+        } else {
+          handleLoss();
+        }
+      }
+    }
+
+    function handleLoss() {
+      resultDisplay.textContent = "Perdiste. Intenta de nuevo.";
+      userInput.disabled = true;
+      endOptions.classList.remove("hidden");
+    }
+
+    function restartGame() {
+      startGame();
+    }
+
+    function goToMain() {
+      window.location.href = "index.html"; // Cambia a la URL de tu página principal.
+    }
+
+    function gameWon() {
+      resultDisplay.textContent = "¡Felicidades! Completaste todos los niveles.";
+      userInput.disabled = true;
+      endOptions.classList.remove("hidden");
+      endOptions.innerHTML = '<button onclick="goToMain()">Página principal</button>';
+    }
+  </script>
+</body>
+</html>

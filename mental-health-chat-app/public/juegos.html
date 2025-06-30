@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juega y Respira - Cuida Tu Mente</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* === ESTILO BASE CUIDA TU MENTE === */
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f8f3ff 0%, #fff5f8 50%, #f0f8ff 100%);
+            color: #4a4a4a;
+            min-height: 100vh;
+        }
+
+        /* Formas flotantes animadas */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            background: #c7b8ea;
+            top: 10%;
+            left: 10%;
+        }
+
+        .shape:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            background: #ffb3d9;
+            top: 60%;
+            right: 15%;
+            animation-delay: 5s;
+        }
+
+        .shape:nth-child(3) {
+            width: 120px;
+            height: 120px;
+            background: #a8d8ea;
+            top: 40%;
+            left: 70%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-40px) rotate(180deg); }
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(199, 184, 234, 0.3);
+        }
+
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #8b7ab8 !important;
+        }
+
+        .navbar-nav .nav-link {
+            color: #6b5b95 !important;
+            font-weight: 500;
+            padding: 10px 15px !important;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            background: rgba(199, 184, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Títulos principales */
+        .main-title {
+            font-size: 3rem;
+            color: #8b7ab8;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #6b5b95;
+            text-align: center;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .category-title {
+            font-size: 2.2rem;
+            color: #8b7ab8;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(139, 122, 184, 0.1);
+        }
+
+        /* Contenedores principales */
+        .main-container {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 20px 40px rgba(199, 184, 234, 0.2);
+        }
+
+        .category-section {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 30px;
+            margin: 30px 0;
+            border-left: 5px solid #c7b8ea;
+            box-shadow: 0 15px 35px rgba(199, 184, 234, 0.15);
+            position: relative;
+        }
+
+        /* Tarjetas de juegos */
+        .game-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(199, 184, 234, 0.1), rgba(168, 216, 234, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .game-card:hover::before {
+            opacity: 1;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(199, 184, 234, 0.5);
+            box-shadow: 0 25px 50px rgba(199, 184, 234, 0.3);
+        }
+
+        .game-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .game-card:hover .game-icon {
+            transform: scale(1.1) rotate(360deg);
+        }
+
+        .game-title {
+            color: #8b7ab8;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .game-description {
+            color: #6b5b95;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex-grow: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Botones de juego */
+        .play-button {
+            background: linear-gradient(45deg, #c7b8ea, #ffb3d9);
+            color: white;
+            padding: 10px 25px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(199, 184, 234, 0.4);
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .play-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(199, 184, 234, 0.6);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Iconos específicos por categoría */
+        .mental-icon { background: linear-gradient(45deg, #c7b8ea, #ffb3d9); }
+        .memory-icon { background: linear-gradient(45deg, #a8d8ea, #c7b8ea); }
+        .logic-icon { background: linear-gradient(45deg, #ffb3d9, #a8d8ea); }
+        .creativity-icon { background: linear-gradient(45deg, #d4b3ff, #FFD700); }
+        .words-icon { background: linear-gradient(45deg, #FFB6C1, #c7b8ea); }
+
+        /* Animaciones */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .fade-in-delay-1 { animation: fadeInUp 1s ease-out 0.1s both; }
+        .fade-in-delay-2 { animation: fadeInUp 1s ease-out 0.2s both; }
+        .fade-in-delay-3 { animation: fadeInUp 1s ease-out 0.3s both; }
+        .fade-in-delay-4 { animation: fadeInUp 1s ease-out 0.4s both; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .main-container {
+                padding: 30px 20px;
+            }
+
+            .category-section {
+                padding: 25px 20px;
+            }
+
+            .game-card {
+                padding: 20px;
+            }
+        }
+
+        /* Efectos adicionales */
+        .category-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #c7b8ea, #a8d8ea, #ffb3d9);
+            border-radius: 25px 25px 0 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- Header -->
+        <header>
+            <nav class="navbar navbar-expand-lg">
+                <div class="container">
+                    <a class="navbar-brand" href="index.html">
+                        <i class="fas fa-heart"></i> Cuida Tu Mente
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.html">Inicio</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.html#que-es">¿Qué es?</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.html#autocuidado">Autocuidado</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="test.html">Test</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.html#recursos">Recursos</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Contenido principal -->
+        <main class="container py-5">
+            <h1 class="main-title fade-in">
+                <i class="fas fa-gamepad"></i>
+                Juega y Respira
+            </h1>
+            <p class="subtitle fade-in">
+                Tómate un momento para ti. Los juegos simples pueden ser una ventana hacia la calma interior. 
+                Aquí encontrarás actividades diseñadas para ayudarte a reducir el estrés, mejorar tu atención 
+                y conectar con tus emociones de manera gentil y divertida.
+            </p>
+
+            <div class="main-container">
+                <!-- Categoría: Bienestar Mental -->
+                <div class="category-section fade-in-delay-1">
+                    <h2 class="category-title">
+                        <i class="fas fa-brain"></i> Bienestar Mental
+                    </h2>
+                    <div class="row g-4">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="game-card">
+                                <div>
+                                    <div class="game-icon mental-icon">
+                                        <i class="fas fa-heart"></i>
+                                    </div>
+                                    <h3 class="game-title">Identifica la Emoción</h3>
+                                    <p class="game-description">
+                                        Explora y comprende tus emociones a través de actividades interactivas que te ayudan a reconocer y gestionar tus sentimientos.
+                                    </p>
+                                </div>
+                                <button class="play-button" onclick="playGame('juego22.html')">
+                                    Jugar Ahora <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="game-card">
+                                <div>
+                                    <div class="game-icon mental-icon">
+                                        <i class="fas fa-paw"></i>
+                                    </div>
+                                    <h3 class="game-title">Encuentra el Animal</h3>
+                                    <p class="game-description">
+                                        Conecta con la naturaleza mientras ejercitas tu atención y relajas tu mente en un entorno natural y tranquilo.
+                                    </p>
+                                </div>
+                                <button class="play-button" onclick="playGame('juego6.html')">
+                                    Jugar Ahora <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="game-card">
+                                <div>
+                                    <div class="game-icon mental-icon">
+                                        <i class="fas fa-link"></i>
+                                    </div>
+                                    <h3 class="game-title">Conecta los Puntos</h3>
+                                    <p class="game-description">
+                                        Ejercita tu coordinación y concentración con este relajante juego visual que calma la mente y mejora el enfoque.
+                                    </p>
+                                </div>
+                                <button class="play-button" onclick="playGame('juego1.html')">
+                                    Jugar Ahora <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categoría: Memoria y Concentración -->
+                <div class="category-section fade-in-delay-2">
+                    <h2 class="category-title">
+                        <i class="fas fa-brain"></i> Memoria y Concentración
+                    </h2>
+                    <div class="row g-4">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="game-card">
+                                <div>
+                                    <div class="game-icon memory-icon">
+                                        <i class="fas fa-th"></i>
+                                    </div>
+                                    <h3 class="game-title">Memorama Terapéutico</h3>
+                                    <p class="game-description">
+                                        Encuentra las parejas mientras ejercitas tu memoria y concentración de manera relajante y sin presión.
+                                    </p>
+                                </div>
+                                <button class="play-button" onclick="playGame('memorama.html')">
+                                    Jugar Ahora <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="game-card">
+                                <div>
+                                    <div class="game-icon memory-icon">
+                                        <i class="fas fa-images"></i>
+                                    </div>
+                                    <h3 class="game-title">Memoriza las Imágenes</h3>
+                                    <p class="game-description">
+                                        Ejercita tu memoria visual recordando secuencias de imágenes mientras fortaleces tu capacidad de retención.
+                                    </p>
+                                </div>
+                                <button class="play-button" onclick="playGame('juego7.html')">
+                                    Jugar Ahora <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="game-card">
+                                <div>
+                                    <div class="game-icon memory-icon">
+                                        <i class="fas fa-font"></i>
+                                    </div>
+                                    <h3 class="game-title">Detecta la Letra</h3>
+                                    <p class="game-description">
+                                        Mejora tu velocidad de procesamiento visual identificando letras y fortaleciendo tu atención al detalle.
+                                    </p>
+                                </div>
+                                <button class="play-button" onclick="playGame('juego11.html')">
+                                    Jugar Ahora <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categoría: Lógica y Razonamiento -->
+                <div class="category-section fade-in-delay-3">
+                    <h2 class="category-title">
+                        <i class="fas fa-lightbulb"></i> Lógica y Razonamiento
+                    </h2>
+                    <div class="row g-4">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="game-card">
+                                <div>
+                                    <div class="game-icon logic-icon">
+                                        <i class="fas fa-calculator"></i>
+                                    </div>
+                                    <h3 class="game-title">Adivina el Número</h3>
+                                    <p class="game-description">
+                                        Ejercita tu lógica matemática de manera divertida y relajante mientras desarrollas tu capacidad de deducción.
+                                    </p>
+                                </div>
+                                <button class="play-button" onclick="playGame('AdivinarelNúmero.html')">
+                                    Jugar Ahora <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="game-card">
+                                <div>
+                                    <div class="game-icon logic-icon">
+                                        <i class="fas fa-search"></i>
+                                    </div>
+                                    <h3 class="game-title">Adivina el Objeto</h3>
+                                    <p class="game-description">
+                                        Desarrolla tu capacidad de deducción y pensamiento lógico mientras descubres objetos misteriosos.
+                                    </p>
+                                </div>
+                                <button class="play-button" onclick="playGame('AdivinarelObjeto.html')">
+                                    Jugar Ahora <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="game-card">
+                                <div>
+                                    <div class="game-icon logic-icon">
+                                        <i class="fas fa-quote-right"></i>
+                                    </div>
+                                    <h3 class="game-title">Completa la Frase</h3>
+                                    <p class="game-description">
+                                        Desarrolla tu comprensión y razonamiento completando frases de manera lógica y coherente.
+                                    </p>
+                                </div>
+                                <button class="play-button" onclick="playGame('juego13.html')">
+                                    Jugar Ahora <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="game-card">
+                                <div>
+                                    <div class="game-icon logic-icon">
+                                        <i class="fas fa-project-diagram"></i>
+                                    </div>
+                                    <h3 class="game-title">Relación entre Objetos</h3>
+                                    <p class="game-description">
+                                        Analiza y comprende las conexiones lógicas entre diferentes elementos fortaleciendo tu razonamiento.
+                                    </p>
+                                </div>
+                                <button class="play-button" onclick="playGame('juego16.html')">
+                                    Jugar Ahora <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="game-card">
+                                <div>
+                                    <div class="game-icon logic-icon">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <h3 class="game-title">Ordena los Días</h3>
+                                    <p class="game-description">
+                                        Ejercita tu secuenciación temporal y organización mental de forma relajante y estructurada.
+                                    </p>
+                                </div>
+                                <button class="play-button" onclick="playGame('juego21.html')">
+                                    Jugar Ahora <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categoría: Creatividad y Expresión -->
+                <div class="category-section fade-in-delay-4">
+                    <h2 class="category-title">
+                        <i class="fas fa-palette"></i> Creatividad y Expresión
+                    </h2>
+                    <div class="row g-4">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="game-card">
+                                <div>
+                                    <div class="game-icon creativity-icon">
+                                        <i class="fas fa-redo"></i>
+                                    </div>
+                                    <h3 class="game-title">Repite las Oraciones</h3>
+                                    <p class="game-description">
+                                        Mejora tu memoria auditiva y expresión verbal repitiendo frases mientras ejercitas tu capacidad de comunicación.
+                                    </p>
+                                </div>
+                                <button class="play-button" onclick="playGame('juego15.html')">
+                                    Jugar Ahora <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categoría: Palabras y Comunicación -->
+                <div class="category-section fade-in-delay-4">
+                    <h2 class="category-title">
+                        <i class="fas fa-comments"></i> Palabras y Comunicación
+                    </h2>
+                    <div class="row g-4">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="game-card">
+                                <div>
+                                    <div class="game-icon words-icon">
+                                        <i class="fas fa-spell-check"></i>
+                                    </div>
+                                    <h3 class="game-title">Sinónimos Relajantes</h3>
+                                    <p class="game-description">
+                                        Enriquece tu vocabulario mientras ejercitas tu mente encontrando palabras con significados similares.
+                                    </p>
+                                </div>
+                                <button class="play-button" onclick="playGame('sinonimos.html')">
+                                    Jugar Ahora <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="game-card">
+                                <div>
+                                    <div class="game-icon words-icon">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </div>
+                                    <h3 class="game-title">Antónimos</h3>
+                                    <p class="game-description">
+                                        Fortalece tu vocabulario encontrando palabras con significados opuestos y mejora tu comprensión lingüística.
+                                    </p>
+                                </div>
+                                <button class="play-button" onclick="playGame('Antónimos.html')">
+                                    Jugar Ahora <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <p style="color: #8b7ab8; font-style: italic; font-size: 1.1rem;">
+                        <i class="fas fa-heart"></i> 
+                        Recuerda: no hay respuestas correctas o incorrectas, solo oportunidades para conocerte mejor.
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function playGame(gameFile) {
+            // Redirige al archivo HTML del juego especificado
+            window.location.href = gameFile;
+        }
+
+        // Efecto de hover suave en las tarjetas
+        document.querySelectorAll('.game-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Animación escalonada para las tarjetas
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.game-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+            });
+        });
+
+        // Efecto parallax suave para las formas flotantes
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const shapes = document.querySelectorAll('.shape');
+            shapes.forEach((shape, index) => {
+                const speed = 0.5 + (index * 0.1);
+                shape.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>

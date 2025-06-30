@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ordena los Días</title>
+  <style>
+    /* Estilos personalizados basados en la paleta morada/violeta */
+    body {
+      background-color: #2e003e;
+      color: #ffffff;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    h2 {
+      margin: 20px 0;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin: 10px;
+      padding: 10px;
+      background-color: #6a0dad;
+      color: white;
+      border: 1px solid #ab47bc;
+      cursor: move;
+      display: inline-block;
+      width: 150px;
+      text-align: center;
+      border-radius: 8px;
+    }
+
+    li:hover {
+      background-color: #ab47bc;
+    }
+
+    button {
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #ab47bc;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+  </style>
+</head>
+<body>
+  <h2>Ordena los Días</h2>
+  <p>Arrastra los días de la semana y colócalos en el orden correcto.</p>
+  
+  <ul id="days" style="list-style: none; padding: 0;"></ul>
+
+  <button id="checkButton" onclick="checkOrder()">Comprobar</button>
+
+  <p id="result"></p>
+  
+  <button id="homeButton" class="hidden" onclick="goToHomePage()">Ir a la página principal</button>
+
+  <button id="startButton" onclick="startGame()">Iniciar Juego</button>
+
+  <script>
+    const correctOrder = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+    let shuffledDays;
+    const daysList = document.getElementById("days");
+    const resultDiv = document.getElementById("result");
+
+    function startGame() {
+      document.getElementById("startButton").style.display = "none"; // Oculta el botón de inicio
+      document.getElementById("checkButton").style.display = "block"; // Muestra el botón de comprobar
+      showOptions(); // Muestra los días mezclados
+    }
+
+    function showOptions() {
+      shuffledDays = [...correctOrder].sort(() => Math.random() - 0.5);
+      daysList.innerHTML = ''; // Limpia los días anteriores
+
+      shuffledDays.forEach(day => {
+        const li = document.createElement("li");
+        li.textContent = day;
+        li.draggable = true;
+        li.ondragstart = (e) => e.dataTransfer.setData("text", e.target.id);
+        li.id = day;
+        daysList.appendChild(li);
+      });
+
+      daysList.ondragover = (e) => e.preventDefault();
+      daysList.ondrop = (e) => {
+        const draggedId = e.dataTransfer.getData("text");
+        const draggedElement = document.getElementById(draggedId);
+        const targetElement = e.target;
+        daysList.insertBefore(draggedElement, targetElement.nextSibling);
+      };
+    }
+
+    function checkOrder() {
+      const currentOrder = Array.from(daysList.children).map(li => li.textContent);
+      if (JSON.stringify(currentOrder) === JSON.stringify(correctOrder)) {
+        resultDiv.textContent = "¡Correcto! Los días están en orden.";
+        document.getElementById("homeButton").style.display = "block"; // Muestra el botón de ir a la página principal
+      } else {
+        resultDiv.textContent = "Incorrecto. Intenta de nuevo.";
+      }
+    }
+
+    function goToHomePage() {
+      window.location.href = "index.html"; // Redirige a la página principal
+    }
+  </script>
+</body>
+</html>

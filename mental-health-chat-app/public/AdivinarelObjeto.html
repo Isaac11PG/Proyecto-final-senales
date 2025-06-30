@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juego de Adivinar el Objeto</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background-color: #2e003e;
+      color: white;
+    }
+    button {
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ab47bc;
+    }
+    button.selected {
+      background-color: #4caf50;
+    }
+    .hidden {
+      display: none;
+    }
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    #image {
+      max-width: 200px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Juego de Adivinar el Objeto</h2>
+  <p>Observa la imagen y selecciona el nombre del objeto correcto.</p>
+  <div id="imageContainer">
+    <img id="image" src="" alt="Objeto a adivinar">
+  </div>
+  <div id="options"></div>
+  <p id="result"></p>
+  <p id="timer">Tiempo restante: <span id="time"></span></p>
+  <button id="restartBtn" class="hidden" onclick="startGame()">Reiniciar Juego</button>
+
+  <script>
+    const objects = [
+      { image: 'https://via.placeholder.com/200?text=Manzana', correct: 'Manzana', options: ['Manzana', 'Banana', 'Pera', 'Naranja'] },
+      { image: 'https://via.placeholder.com/200?text=Perro', correct: 'Perro', options: ['Gato', 'Perro', 'Ratón', 'Conejo'] },
+      { image: 'https://via.placeholder.com/200?text=Avión', correct: 'Avión', options: ['Avión', 'Coche', 'Bicicleta', 'Barco'] },
+      { image: 'https://via.placeholder.com/200?text=Coche', correct: 'Coche', options: ['Coche', 'Avión', 'Barco', 'Bicicleta'] },
+      { image: 'https://via.placeholder.com/200?text=Flor', correct: 'Flor', options: ['Flor', 'Árbol', 'Rama', 'Hoja'] }
+    ];
+
+    let level = 0;
+    let timeLeft = 10;
+    let timer;
+
+    const imageElement = document.getElementById('image');
+    const optionsDiv = document.getElementById('options');
+    const resultDiv = document.getElementById('result');
+    const timeDiv = document.getElementById('time');
+    const restartBtn = document.getElementById('restartBtn');
+
+    function startGame() {
+      level = 0;
+      restartBtn.classList.add('hidden');
+      nextLevel();
+    }
+
+    function nextLevel() {
+      if (level >= objects.length) {
+        resultDiv.textContent = "¡Felicidades! Has completado todos los niveles.";
+        restartBtn.classList.remove('hidden');
+        return;
+      }
+
+      const currentObject = objects[level];
+      imageElement.src = currentObject.image;
+      optionsDiv.innerHTML = '';
+      resultDiv.textContent = '';
+      startTimer();
+
+      currentObject.options.forEach(option => {
+        const button = document.createElement('button');
+        button.textContent = option;
+        button.onclick = () => checkAnswer(option, currentObject.correct);
+        optionsDiv.appendChild(button);
+      });
+    }
+
+    function checkAnswer(selected, correct) {
+      if (selected === correct) {
+        resultDiv.textContent = "¡Correcto!";
+        level++;
+        setTimeout(nextLevel, 2000);
+      } else {
+        resultDiv.textContent = "¡Incorrecto! Intenta de nuevo.";
+        restartBtn.classList.remove('hidden');
+      }
+    }
+
+    function startTimer() {
+      timeLeft = 10;
+      timeDiv.textContent = timeLeft;
+      clearInterval(timer);
+      timer = setInterval(() => {
+        timeLeft--;
+        timeDiv.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          resultDiv.textContent = "¡Se acabó el tiempo!";
+          restartBtn.classList.remove('hidden');
+        }
+      }, 1000);
+    }
+
+    startGame();
+  </script>
+</body>
+</html>

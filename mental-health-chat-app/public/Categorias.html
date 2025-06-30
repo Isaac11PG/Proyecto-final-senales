@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juego de Categorías</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background-color: #2e003e;
+      color: white;
+    }
+    button {
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ab47bc;
+    }
+    button.selected {
+      background-color: #4caf50; /* Color verde para selección */
+    }
+    .hidden {
+      display: none;
+    }
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Juego de Categorías</h2>
+  <p>Selecciona las palabras que pertenecen a la categoría indicada.</p>
+  <p id="category"></p>
+  <div id="options"></div>
+  <p id="result"></p>
+  <p id="timer">Tiempo restante: <span id="time"></span></p>
+  <button id="restartBtn" class="hidden" onclick="startGame()">Reiniciar Juego</button>
+
+  <script>
+    let level = 1;
+    let timer;
+    let timeLeft = 10;
+    const categories = [
+      { category: 'Frutas', options: ['Manzana', 'Banana', 'Carro', 'Pera', 'Silla'], correct: ['Manzana', 'Banana', 'Pera'] },
+      { category: 'Animales', options: ['Perro', 'Gato', 'Mesa', 'León', 'Tigre'], correct: ['Perro', 'Gato', 'León', 'Tigre'] },
+      { category: 'Colores', options: ['Rojo', 'Azul', 'Verde', 'Silla', 'Amarillo'], correct: ['Rojo', 'Azul', 'Verde', 'Amarillo'] },
+      { category: 'Deportes', options: ['Fútbol', 'Básquetbol', 'Ciclismo', 'Mesa', 'Voleibol'], correct: ['Fútbol', 'Básquetbol', 'Ciclismo', 'Voleibol'] },
+      { category: 'Comida', options: ['Pizza', 'Pasta', 'Zapatillas', 'Hamburguesa', 'Galleta'], correct: ['Pizza', 'Pasta', 'Hamburguesa', 'Galleta'] },
+      { category: 'Instrumentos', options: ['Guitarra', 'Piano', 'Tambor', 'Viento', 'Batería'], correct: ['Guitarra', 'Piano', 'Tambor', 'Batería'] },
+      { category: 'Países', options: ['Argentina', 'Brasil', 'Chile', 'Mesa', 'Perú'], correct: ['Argentina', 'Brasil', 'Chile', 'Perú'] },
+      { category: 'Tecnología', options: ['Computadora', 'Teléfono', 'Cámara', 'Mesa', 'Reloj'], correct: ['Computadora', 'Teléfono', 'Cámara', 'Reloj'] },
+      { category: 'Lugares', options: ['Playa', 'Montaña', 'Ciudad', 'Desierto', 'Calle'], correct: ['Playa', 'Montaña', 'Ciudad', 'Desierto'] },
+      { category: 'Carreras', options: ['Médico', 'Profesor', 'Abogado', 'Carpintero', 'Ingeniero'], correct: ['Médico', 'Profesor', 'Abogado', 'Ingeniero'] }
+    ];
+    const categoryDiv = document.getElementById('category');
+    const optionsDiv = document.getElementById('options');
+    const resultDiv = document.getElementById('result');
+    const timeDiv = document.getElementById('time');
+    const restartBtn = document.getElementById('restartBtn');
+    let selectedAnswers = [];
+
+    function startGame() {
+      level = 1;
+      restartBtn.classList.add('hidden');
+      selectedAnswers = [];
+      nextLevel();
+    }
+
+    function nextLevel() {
+      if (level > categories.length) {
+        resultDiv.textContent = "¡Felicidades! Has completado todos los niveles.";
+        restartBtn.classList.remove('hidden');
+        return;
+      }
+
+      const currentCategory = categories[level - 1];
+      categoryDiv.textContent = `Selecciona las palabras de la categoría: "${currentCategory.category}"`;
+      optionsDiv.innerHTML = '';
+      selectedAnswers = [];  // Resetear las respuestas seleccionadas
+
+      currentCategory.options.forEach(option => {
+        const button = document.createElement("button");
+        button.textContent = option;
+        button.onclick = () => selectAnswer(button, option, currentCategory.correct);
+        optionsDiv.appendChild(button);
+      });
+
+      startTimer();
+    }
+
+    function selectAnswer(button, selected, correct) {
+      button.classList.add('selected');
+      if (selected === "Silla") {
+        button.classList.add('wrong');  // Agregar color si es incorrecto
+      }
+
+      if (correct.includes(selected)) {
+        selectedAnswers.push(selected);
+        button.disabled = true;
+        checkLevelCompletion(correct);
+      } else {
+        resultDiv.textContent = "Incorrecto. Intenta de nuevo.";
+        restartBtn.classList.remove('hidden');
+      }
+    }
+
+    function checkLevelCompletion(correct) {
+      if (selectedAnswers.length === correct.length) {
+        resultDiv.textContent = "¡Correcto!";
+        level++;
+        setTimeout(nextLevel, 2000);
+      }
+    }
+
+    function startTimer() {
+      timeLeft = 10;
+      timeDiv.textContent = timeLeft;
+      clearInterval(timer);  // Detener cualquier cronómetro anterior
+      timer = setInterval(() => {
+        timeLeft--;
+        timeDiv.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          resultDiv.textContent = "¡Se acabó el tiempo!";
+          restartBtn.classList.remove('hidden');
+        }
+      }, 1000);
+    }
+
+    startGame();
+  </script>
+</body>
+</html>

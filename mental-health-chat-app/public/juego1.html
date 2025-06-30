@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conecta los Puntos</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background-color: #2e003e;
+      color: #ffffff;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    
+    h1, h2, p {
+      margin: 20px 0;
+    }
+
+    button {
+      background-color: #6a0dad;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    
+    button:hover {
+      background-color: #ab47bc;
+    }
+    
+    .point {
+      width: 50px;
+      height: 50px;
+      border: 2px solid black;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 50px;
+      position: absolute;
+      cursor: pointer;
+    }
+
+    .canvas-container {
+      width: 400px;
+      height: 400px;
+      border: 1px solid black;
+      position: relative;
+      margin: auto;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #feedback {
+      font-size: 1.2rem;
+      color: red;
+    }
+
+    #post-level-options {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    #timer-text, #attempts-text, #level-text {
+      font-weight: bold;
+      color: #e1bee7;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Conecta los Puntos: Sigue la Secuencia</h1>
+  <h2 id="instructions-text">Sigue la secuencia: Conecta 1-A, 2-B, ...</h2>
+  <div class="canvas-container">
+    <canvas id="canvas" width="400" height="400"></canvas>
+    <!-- Los puntos son dinámicos -->
+  </div>
+
+  <p id="timer-text">Tiempo restante: 8s</p>
+  <p id="attempts-text">Intentos restantes: 2</p>
+  <p id="feedback"></p>
+  <div id="post-level-options" class="hidden">
+    <button onclick="nextLevel()">Avanzar al siguiente nivel</button>
+    <button onclick="retryLevel()">Repetir nivel</button>
+    <button onclick="goToIndex()">Regresar al inicio</button>
+  </div>
+  <button id="start-button" onclick="startGame()">Iniciar Juego</button>
+
+  <script>
+    let level = 1;
+    let attempts = 2;
+    let timeLeft;
+    let timerInterval;
+    let currentIndex = 0;
+    let lastPoint = null;
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    let points = [];  // Aquí se van a agregar los puntos dinámicamente
+    const maxTime = 8; // Tiempo fijo por nivel
+    const minTime = 4; // Tiempo mínimo permitido
+
+    // Función para comenzar el juego
+    function startGame() {
+      document.getElementById("start-button").style.display = "none"; // Ocultar botón de inicio
+      resetLevel();
+      generatePoints();
+      startTimer();
+    }
+
+    // Resetear al inicio de cada nivel
+    function resetLevel() {
+      attempts = 2;
+      currentIndex = 0;
+      timeLeft = maxTime; // Mantener el tiempo fijo a 8 segundos
+      clearInterval(timerInterval);
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("attempts-text").textContent = `Intentos restantes: ${attempts}`;
+      document.getElementById("timer-text").textContent = `Tiempo restante: ${timeLeft}s`;
+      document.getElementById("post-level-options").classList.add("hidden");
+      points = [];  // Limpiar los puntos
+
+      // Eliminar los puntos previos
+      const pointElements = document.querySelectorAll('.point');
+      pointElements.forEach(point => point.remove());
+    }
+
+    // Generar puntos aleatorios para el nivel
+    function generatePoints() {
+      const numPoints = level + 3; // Cada nivel agrega más puntos (3 puntos iniciales, más por nivel)
+      const pointLabels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789'.split('');  // Etiquetas de los puntos
+      let pointsArray = [];
+
+      // Crear puntos de forma aleatoria
+      for (let i = 0; i < numPoints; i++) {
+        const pointId = 'point' + pointLabels[i];
+        pointsArray.push(pointId);
+        const point = document.createElement("div");
+        point.id = pointId;
+        point.classList.add("point");
+        point.textContent = pointLabels[i];
+
+        const top = Math.floor(Math.random() * 350) + 25;  // Posiciones aleatorias para los puntos
+        const left = Math.floor(Math.random() * 350) + 25;
+        point.style.top = `${top}px`;
+        point.style.left = `${left}px`;
+
+        document.querySelector(".canvas-container").appendChild(point);
+      }
+
+      points = pointsArray;
+      shufflePoints();  // Mezclar puntos para hacer la secuencia aleatoria
+      setInstructionsText();  // Establecer el texto de las instrucciones
+    }
+
+    // Mezclar los puntos aleatoriamente
+    function shufflePoints() {
+      points = points.sort(() => Math.random() - 0.5); // Mezclar puntos
+    }
+
+    // Establecer el texto de las instrucciones basado en la secuencia
+    function setInstructionsText() {
+      let instructionText = 'Conecta la secuencia: ';
+      points.forEach((point, index) => {
+        instructionText += `${point.replace('point', '')}`;
+        if (index < points.length - 1) instructionText += ', ';
+      });
+      document.getElementById("instructions-text").textContent = instructionText;
+    }
+
+    // Iniciar el cronómetro
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer-text").textContent = `Tiempo restante: ${timeLeft}s`;
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          endLevel(false, "¡Se acabó el tiempo!");
+          disablePoints();  // Deshabilitar puntos cuando se acaba el tiempo
+        }
+      }, 1000);
+    }
+
+    // Deshabilitar la posibilidad de hacer clic en los puntos
+    function disablePoints() {
+      const pointElements = document.querySelectorAll('.point');
+      pointElements.forEach(point => {
+        point.style.pointerEvents = 'none'; // Deshabilitar eventos de clic
+      });
+    }
+
+    // Comprobar si el punto seleccionado es el correcto
+    document.addEventListener('click', (event) => {
+      if (event.target.classList.contains('point') && timeLeft > 0) {  // Asegurarse que no se puede hacer clic después de que se acaba el tiempo
+        if (event.target.id === points[currentIndex]) {
+          event.target.style.backgroundColor = "lightgreen";
+          const rect = event.target.getBoundingClientRect();
+          const x = rect.left + rect.width / 2 - canvas.getBoundingClientRect().left;
+          const y = rect.top + rect.height / 2 - canvas.getBoundingClientRect().top;
+
+          if (lastPoint) {
+            ctx.beginPath();
+            ctx.moveTo(lastPoint.x, lastPoint.y);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+          }
+          lastPoint = { x, y };
+          currentIndex++;
+          if (currentIndex === points.length) {
+            endLevel(true, "¡Completado!");
+          }
+        } else {
+          attempts--;
+          document.getElementById("attempts-text").textContent = `Intentos restantes: ${attempts}`;
+          if (attempts <= 0) {
+            endLevel(false, "Te quedaste sin intentos.");
+          } else {
+            document.getElementById("feedback").textContent = "Incorrecto. Intenta de nuevo.";
+          }
+        }
+      }
+    });
+
+    // Función para finalizar el nivel
+    function endLevel(success, message) {
+      clearInterval(timerInterval);
+      document.getElementById("feedback").textContent = message;
+      document.getElementById("post-level-options").classList.remove("hidden");
+    }
+
+    // Función para avanzar al siguiente nivel
+    function nextLevel() {
+      level++;
+      resetLevel();
+      generatePoints();
+      startTimer();
+    }
+
+    // Función para repetir el nivel
+    function retryLevel() {
+      resetLevel();
+      generatePoints();
+      startTimer();
+    }
+
+    // Regresar al inicio
+    function goToIndex() {
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

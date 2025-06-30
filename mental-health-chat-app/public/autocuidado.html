@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tips de Autocuidado - Cuida Tu Mente</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Copia aquí el bloque <style> de tu index.html para mantener el diseño */
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f8f3ff 0%, #fff5f8 50%, #f0f8ff 100%);
+            color: #4a4a4a;
+            min-height: 100vh;
+        }
+        .floating-shapes { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .shape { position: absolute; border-radius: 50%; opacity: 0.08; animation: float 25s infinite ease-in-out; }
+        .shape:nth-child(1) { width: 300px; height: 300px; background: linear-gradient(45deg, #c7b8ea, #a8d8ea); top: 5%; left: 5%; animation-delay: 0s; }
+        .shape:nth-child(2) { width: 200px; height: 200px; background: linear-gradient(45deg, #ffb3d9, #d4b3ff); top: 50%; right: 10%; animation-delay: 8s; }
+        .shape:nth-child(3) { width: 150px; height: 150px; background: linear-gradient(45deg, #a8d8ea, #FFD700); bottom: 15%; left: 15%; animation-delay: 16s; }
+        .shape:nth-child(4) { width: 120px; height: 120px; background: linear-gradient(45deg, #d4b3ff, #FFB6C1); top: 25%; right: 25%; animation-delay: 24s; }
+        @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); } 25% { transform: translateY(-30px) rotate(90deg) scale(1.1); } 50% { transform: translateY(-60px) rotate(180deg) scale(0.9); } 75% { transform: translateY(-30px) rotate(270deg) scale(1.05); } }
+        .content-wrapper { position: relative; z-index: 2; }
+        header { padding: 15px 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(199, 184, 234, 0.2); position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 20px rgba(139, 122, 184, 0.1); }
+        .navbar-brand { font-size: 2rem; font-weight: bold; color: #8b7ab8 !important; text-shadow: 2px 2px 4px rgba(139, 122, 184, 0.2); }
+        .navbar-nav .nav-link { color: #6b5b95 !important; font-weight: 500; transition: all 0.3s ease; padding: 10px 15px !important; border-radius: 25px; margin: 0 5px; position: relative; overflow: hidden; }
+        .navbar-nav .nav-link:hover { background: rgba(199, 184, 234, 0.2); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(199, 184, 234, 0.3); }
+        .section-title { text-align: center; font-size: 2.8rem; color: #8b7ab8; margin-bottom: 50px; text-shadow: 2px 2px 4px rgba(139, 122, 184, 0.1); }
+        .tips-section { padding: 80px 0; background: rgba(255,255,255,0.8); border-radius: 40px; margin: 60px 0; box-shadow: 0 10px 40px rgba(139,122,184,0.1); }
+        .card { border: none; border-radius: 25px; box-shadow: 0 8px 30px rgba(199,184,234,0.08); }
+        .card-body { text-align: center; }
+        .card-title { color: #8b7ab8; font-size: 1.3rem; font-weight: 600; }
+        .card-text { color: #6b5b95; }
+        .fa-2x { color: #a8d8ea; margin-bottom: 10px; }
+        footer { background: linear-gradient(135deg, rgba(107, 91, 149, 0.1), rgba(139, 122, 184, 0.1)); padding: 50px 0; text-align: center; color: #6b5b95; border-top: 1px solid rgba(199, 184, 234, 0.3); margin-top: 80px; }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <div class="content-wrapper">
+        <header>
+            <nav class="navbar navbar-expand-lg">
+                <div class="container">
+                    <a class="navbar-brand" href="index.html">
+                        <i class="fas fa-heart"></i> Cuida Tu Mente
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                            <li class="nav-item"><a class="nav-link" href="salud-mental.html">¿Qué es?</a></li>
+                            <li class="nav-item"><a class="nav-link active" href="autocuidado.html">Autocuidado</a></li>
+                            <li class="nav-item"><a class="nav-link" href="test.html">Test</a></li>
+                            <li class="nav-item"><a class="nav-link" href="recursos.html">Recursos</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <!-- ...existing code... -->
+        <main>
+            <section class="tips-section">
+                <div class="container">
+                    <h2 class="section-title"><i class="fas fa-heartbeat"></i> Tips de autocuidado</h2>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <a href="https://www-health-harvard-edu.translate.goog/blog/strategies-to-promote-better-sleep-in-these-uncertain-times-2020032719333?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=tc" target="_blank" style="text-decoration:none;">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-body">
+                                        <i class="fas fa-bed fa-2x mb-2"></i>
+                                        <h5 class="card-title">Duerme bien</h5>
+                                        <p class="card-text">El descanso es esencial para tu bienestar emocional.</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="https://www.cso.go.cr/divulgacion/campanas/saludmental/CUIDA%20TU%20SALUD%20MENTAL%20DENTRO%20Y%20FUERA%20DE%20LO%20LABORALGESTION%20DE%20EMOCIONES.pdf" target="_blank" style="text-decoration:none;">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-body">
+                                        <i class="fas fa-comments fa-2x mb-2"></i>
+                                        <h5 class="card-title">Habla de tus emociones</h5>
+                                        <p class="card-text">Compartir lo que sientes ayuda a liberar tensiones.</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="https://www.udep.edu.pe/hoy/2022/08/actividad-fisica-aliada-de-salud-mental/" target="_blank" style="text-decoration:none;">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-body">
+                                        <i class="fas fa-running fa-2x mb-2"></i>
+                                        <h5 class="card-title">Haz ejercicio</h5>
+                                        <p class="card-text">La actividad física mejora el ánimo y reduce el estrés.</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="https://www.ucentral.cl/noticias/alumnos/dave/los-beneficios-de-establecer-limites-dificultades-y-como-aplicarlos" target="_blank" style="text-decoration:none;">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-body">
+                                        <i class="fas fa-user-shield fa-2x mb-2"></i>
+                                        <h5 class="card-title">Establece límites</h5>
+                                        <p class="card-text">Aprende a decir no y cuida tu energía emocional.</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="https://ve.scielo.org/scielo.php?script=sci_arttext&pid=S2739-00632025000300128" target="_blank" style="text-decoration:none;">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-body">
+                                        <i class="fas fa-mobile-alt fa-2x mb-2"></i>
+                                        <h5 class="card-title">Haz pausas digitales</h5>
+                                        <p class="card-text">Desconéctate de la tecnología para reconectar contigo.</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="https://news.stanford.edu/stories/2022/09/asking-help-hard-people-want-help-realize" target="_blank" style="text-decoration:none;">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-body">
+                                        <i class="fas fa-hands-helping fa-2x mb-2"></i>
+                                        <h5 class="card-title">Pide ayuda sin miedo</h5>
+                                        <p class="card-text">Buscar apoyo es un acto de valentía, no de debilidad.</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="container">
+                <p>&copy; 2025 Cuida Tu Mente. Comprometidos con tu bienestar mental.</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

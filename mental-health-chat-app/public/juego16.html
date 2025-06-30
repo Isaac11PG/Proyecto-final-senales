@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relación entre Objetos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Relación entre Objetos</h2>
+  <p id="instructions" class="hidden">Selecciona la relación que existe entre los siguientes objetos:</p>
+  <p id="pair" style="font-size: 20px; font-weight: bold; color: #e1bee7;"></p>
+  <div id="options"></div>
+  <p id="timer" style="font-size: 18px; font-weight: bold; color: red;"></p>
+  <p id="result"></p>
+  <button id="start-game" onclick="startGame()">Iniciar Juego</button>
+  <button id="next-level" class="hidden" onclick="nextLevel()">Siguiente Nivel</button>
+  <button id="retry" class="hidden" onclick="retry()">Reintentar</button>
+  <button id="go-home" class="hidden" onclick="location.reload()">Ir a Inicio</button>
+
+  <script>
+    const levels = [
+      { pair: "Carro y Bicicleta", correct: "Medios de Transporte", options: ["Frutas", "Verduras", "Medios de Transporte"] },
+      { pair: "Sol y Luna", correct: "Cuerpos Celestes", options: ["Cuerpos Celestes", "Animales", "Frutas"] },
+      { pair: "Llave y Cerradura", correct: "Herramientas", options: ["Herramientas", "Verduras", "Medios de Transporte"] },
+      { pair: "Delfín y Tiburón", correct: "Animales Acuáticos", options: ["Animales Acuáticos", "Animales Terrestres", "Frutas"] },
+      { pair: "Piano y Violín", correct: "Instrumentos Musicales", options: ["Instrumentos Musicales", "Verduras", "Cuerpos Celestes"] },
+      { pair: "Manzana y Plátano", correct: "Frutas", options: ["Animales", "Frutas", "Medios de Transporte"] },
+      { pair: "Computadora y Teléfono", correct: "Tecnología", options: ["Frutas", "Herramientas", "Tecnología"] },
+      { pair: "Perro y Lobo", correct: "Animales", options: ["Instrumentos Musicales", "Animales", "Medios de Transporte"] },
+      { pair: "Cuchara y Tenedor", correct: "Utensilios de Cocina", options: ["Utensilios de Cocina", "Tecnología", "Cuerpos Celestes"] },
+      { pair: "Avión y Tren", correct: "Medios de Transporte", options: ["Medios de Transporte", "Frutas", "Animales"] },
+    ];
+
+    let currentLevel = 0;
+    let timer;
+    const timerElement = document.getElementById("timer");
+    const pairElement = document.getElementById("pair");
+    const optionsElement = document.getElementById("options");
+    const resultElement = document.getElementById("result");
+    const startGameButton = document.getElementById("start-game");
+    const nextLevelButton = document.getElementById("next-level");
+    const retryButton = document.getElementById("retry");
+    const goHomeButton = document.getElementById("go-home");
+    const instructionsElement = document.getElementById("instructions");
+
+    function startGame() {
+      startGameButton.classList.add("hidden");
+      instructionsElement.classList.remove("hidden");
+      currentLevel = 0;
+      loadLevel();
+    }
+
+    function loadLevel() {
+      clearResult();
+      const level = levels[currentLevel];
+      pairElement.textContent = level.pair;
+      optionsElement.innerHTML = "";
+      level.options.forEach(option => {
+        const button = document.createElement("button");
+        button.textContent = option;
+        button.onclick = () => checkAnswer(option);
+        optionsElement.appendChild(button);
+      });
+      startTimer();
+    }
+
+    function startTimer() {
+      let timeLeft = 10;
+      timerElement.textContent = `Tiempo: ${timeLeft} segundos`;
+      timer = setInterval(() => {
+        timeLeft--;
+        timerElement.textContent = `Tiempo: ${timeLeft} segundos`;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          endGame(false);
+        }
+      }, 1000);
+    }
+
+    function checkAnswer(selected) {
+      clearInterval(timer);
+      const level = levels[currentLevel];
+      if (selected === level.correct) {
+        resultElement.textContent = "¡Correcto!";
+        nextLevelButton.classList.remove("hidden");
+      } else {
+        resultElement.textContent = "Incorrecto. Intenta de nuevo.";
+        retryButton.classList.remove("hidden");
+        goHomeButton.classList.remove("hidden");
+      }
+    }
+
+    function nextLevel() {
+      currentLevel++;
+      if (currentLevel >= levels.length) {
+        endGame(true);
+      } else {
+        nextLevelButton.classList.add("hidden");
+        loadLevel();
+      }
+    }
+
+    function retry() {
+      retryButton.classList.add("hidden");
+      goHomeButton.classList.add("hidden");
+      loadLevel();
+    }
+
+    function endGame(won) {
+      pairElement.textContent = "";
+      optionsElement.innerHTML = "";
+      if (won) {
+        resultElement.textContent = "¡Felicidades, completaste todos los niveles!";
+        goHomeButton.classList.remove("hidden");
+      } else {
+        resultElement.textContent = "Perdiste. ¿Quieres intentarlo de nuevo?";
+        retryButton.classList.remove("hidden");
+        goHomeButton.classList.remove("hidden");
+      }
+    }
+
+    function clearResult() {
+      resultElement.textContent = "";
+      timerElement.textContent = "";
+    }
+  </script>
+</body>
+</html>

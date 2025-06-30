@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Identifica la Emoción</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Identifica la Emoción</h1>
+    <p class="timer" id="timer-text">Tiempo restante: 8s</p>
+    <p class="attempts" id="attempts-text">Intentos restantes: 2</p>
+    <p class="score" id="score-text">Puntuación: 0</p>
+    <h2 id="level-text">Nivel: 1</h2>
+    <p id="description"></p>
+    <div id="options"></div>
+    <p id="feedback"></p>
+    <div id="post-level-options" class="hidden">
+      <button onclick="nextLevel()">Avanzar al siguiente nivel</button>
+      <button onclick="retryLevel()">Repetir nivel</button>
+      <button onclick="goToIndex()">Regresar al inicio</button>
+    </div>
+  </div>
+
+  <script>
+    let level = 1;
+    let score = 0;
+    let attempts = 2;
+    let timeLeft;
+    let timerInterval;
+    let currentEmotion = "";
+    const maxTime = 8; // Tiempo inicial en nivel 1
+    const minTime = 4; // Tiempo mínimo permitido
+    const emotions = ["Tristeza", "Alegría", "Miedo", "Ira", "Sorpresa", "Desagrado"];
+    const descriptions = {
+      Tristeza: [
+        "Un niño perdió su juguete favorito.",
+        "Una persona recibe malas noticias.",
+        "No logré el ascenso que quería."
+      ],
+      Alegría: [
+        "Acabo de ganar la lotería.",
+        "Hoy es mi cumpleaños y recibí regalos.",
+        "Finalmente logré completar un proyecto importante."
+      ],
+      Miedo: [
+        "Estoy solo en una casa oscura y escucho ruidos.",
+        "Vi una película de terror aterradora.",
+        "Alguien me persigue en un callejón oscuro."
+      ],
+      Ira: [
+        "Alguien me cortó en el tráfico.",
+        "Recibí un insulto de un desconocido.",
+        "Rompí algo importante por frustración."
+      ],
+      Sorpresa: [
+        "Recibí un regalo inesperado.",
+        "Encontré dinero en mi bolsillo.",
+        "Un amigo me visitó sin avisar."
+      ],
+      Desagrado: [
+        "Probé un alimento que sabía mal.",
+        "Vi algo desagradable en la calle.",
+        "Olí algo realmente horrible."
+      ]
+    };
+
+    function startGame() {
+      resetLevel();
+      generateQuestion();
+      startTimer();
+    }
+
+    function resetLevel() {
+      attempts = 2;
+      timeLeft = Math.max(maxTime - (level - 1), minTime); // Ajustar tiempo según el nivel
+      clearInterval(timerInterval);
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("attempts-text").textContent = `Intentos restantes: ${attempts}`;
+      document.getElementById("timer-text").textContent = `Tiempo restante: ${timeLeft}s`;
+      document.getElementById("options").innerHTML = "";
+      document.getElementById("post-level-options").classList.add("hidden");
+    }
+
+    function generateQuestion() {
+      document.getElementById("level-text").textContent = `Nivel: ${level}`;
+      document.getElementById("score-text").textContent = `Puntuación: ${score}`;
+
+      const emotionKeys = Object.keys(descriptions);
+      currentEmotion = emotionKeys[Math.floor(Math.random() * emotionKeys.length)];
+      const randomDescription =
+        descriptions[currentEmotion][Math.floor(Math.random() * descriptions[currentEmotion].length)];
+
+      document.getElementById("description").textContent = randomDescription;
+
+      const options = shuffle([...emotions]);
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      options.forEach((emotion) => {
+        const button = document.createElement("button");
+        button.textContent = emotion;
+        button.className = "emotion-button";
+        button.onclick = () => checkAnswer(emotion);
+        optionsDiv.appendChild(button);
+      });
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer-text").textContent = `Tiempo restante: ${timeLeft}s`;
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          endLevel(false, "¡Se acabó el tiempo!");
+        }
+      }, 1000);
+    }
+
+    function checkAnswer(selectedEmotion) {
+      if (selectedEmotion === currentEmotion) {
+        score += 10 * level;
+        endLevel(true, "¡Correcto! +10 puntos.");
+      } else {
+        attempts--;
+        document.getElementById("attempts-text").textContent = `Intentos restantes: ${attempts}`;
+        if (attempts <= 0) {
+          endLevel(false, "Te quedaste sin intentos.");
+        } else {
+          document.getElementById("feedback").textContent = "Incorrecto. Intenta de nuevo.";
+        }
+      }
+    }
+
+    function endLevel(success, message) {
+      clearInterval(timerInterval);
+      document.getElementById("feedback").textContent = message;
+      document.getElementById("options").innerHTML = "";
+
+      const postLevelOptions = document.getElementById("post-level-options");
+      postLevelOptions.classList.remove("hidden");
+    }
+
+    function nextLevel() {
+      level++;
+      resetLevel();
+      generateQuestion();
+      startTimer();
+    }
+
+    function retryLevel() {
+      resetLevel();
+      generateQuestion();
+      startTimer();
+    }
+
+    function goToIndex() {
+      window.location.href = "index.html";
+    }
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    startGame();
+  </script>
+</body>
+</html>
