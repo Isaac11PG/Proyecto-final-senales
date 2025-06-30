@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memoriza las Imágenes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #2e003e;
+      color: #ffffff;
+    }
+
+    .images-container, .selection-container, .options {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px;
+    }
+
+    .image-card {
+      width: 100px;
+      height: 100px;
+      border: 2px solid #ffffff;
+      border-radius: 10px;
+      background-color: #6a0dad;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .image-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .loading {
+      background: linear-gradient(45deg, #6a0dad, #ab47bc);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    button {
+      background-color: #ab47bc;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #6a0dad;
+    }
+
+    button:disabled {
+      background-color: #555;
+      cursor: not-allowed;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .countdown {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffff00;
+      margin: 20px 0;
+    }
+
+    .selected {
+      opacity: 0.5 !important;
+      pointer-events: none;
+      border-color: #00ff00 !important;
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Memoriza las Imágenes</h2>
+  <p>Nivel: <span id="level">1</span></p>
+  <p>Intentos restantes: <span id="attempts">2</span></p>
+  <p>Observa el orden de las imágenes durante 5 segundos, luego selecciona en el mismo orden.</p>
+  
+  <div id="countdown" class="countdown hidden"></div>
+  <div id="images" class="images-container"></div>
+  <div id="selection" class="selection-container"></div>
+  <div id="error-message" class="error-message"></div>
+  <button id="checkButton" onclick="checkOrder()" style="display: none;">Comprobar</button>
+  <div id="result"></div>
+  <div id="options" class="options hidden">
+    <button onclick="retryLevel()">Intentar de nuevo</button>
+    <button onclick="goToHome()">Ir a página principal</button>
+  </div>
+  
+  <!-- Botón de inicio -->
+  <button id="startButton" onclick="startLevel()">Iniciar Juego</button>
+
+  <script>
+    // Temas para obtener imágenes variadas
+    const imageThemes = [
+      'nature', 'animals', 'food', 'cars', 'flowers', 'architecture', 
+      'technology', 'sports', 'music', 'art', 'space', 'ocean'
+    ];
+
+    let level = 1;
+    let attempts = 2;
+    let currentImages = [];
+    let selectedOrder = [];
+    const imagesDiv = document.getElementById("images");
+    const selectionDiv = document.getElementById("selection");
+    const result = document.getElementById("result");
+    const levelSpan = document.getElementById("level");
+    const attemptsSpan = document.getElementById("attempts");
+    const checkButton = document.getElementById("checkButton");
+    const optionsDiv = document.getElementById("options");
+    const startButton = document.getElementById("startButton");
+    const countdownDiv = document.getElementById("countdown");
+    const errorDiv = document.getElementById("error-message");
+
+    // Función para obtener imágenes usando Picsum (funciona mejor)
+    async function fetchImages(count) {
+      try {
+        errorDiv.textContent = "";
+        const images = [];
+        
+        for (let i = 0; i < count; i++) {
+          // Usar diferentes IDs de imagen para mayor variedad
+          const imageId = Math.floor(Math.random() * 500) + 100;
+          const seed = Math.random().toString(36).substring(7);
+          
+          // Usar Lorem Picsum que es más confiable
+          const imageUrl = `https://picsum.photos/seed/${seed}/100/100?random=${imageId}`;
+          
+          images.push({
+            src: imageUrl,
+            alt: `imagen-${i}`,
+            theme: `tema-${i}`,
+            id: `img-${imageId}-${seed}`
+          });
+        }
+        
+        return images;
+      } catch (error) {
+        console.error('Error fetching images:', error);
+        errorDiv.textContent = "Error al cargar imágenes. Usando imágenes de respaldo.";
+        return getFallbackImages(count);
+      }
+    }
+
+    // Imágenes de respaldo mejoradas con más variedad visual
+    function getFallbackImages(count) {
+      const fallbackImages = [
+        { src: "https://via.placeholder.com/100x100/FF6B6B/FFFFFF?text=🏠", alt: "Casa", theme: "casa", id: "casa-1" },
+        { src: "https://via.placeholder.com/100x100/4ECDC4/FFFFFF?text=🐕", alt: "Perro", theme: "perro", id: "perro-1" },
+        { src: "https://via.placeholder.com/100x100/45B7D1/FFFFFF?text=✈️", alt: "Avión", theme: "avion", id: "avion-1" },
+        { src: "https://via.placeholder.com/100x100/96CEB4/FFFFFF?text=📚", alt: "Libro", theme: "libro", id: "libro-1" },
+        { src: "https://via.placeholder.com/100x100/FECA57/FFFFFF?text=🏖️", alt: "Playa", theme: "playa", id: "playa-1" },
+        { src: "https://via.placeholder.com/100x100/FF9FF3/FFFFFF?text=🚗", alt: "Coche", theme: "coche", id: "coche-1" },
+        { src: "https://via.placeholder.com/100x100/54A0FF/FFFFFF?text=🌸", alt: "Flor", theme: "flor", id: "flor-1" },
+        { src: "https://via.placeholder.com/100x100/5F27CD/FFFFFF?text=🐱", alt: "Gato", theme: "gato", id: "gato-1" },
+        { src: "https://via.placeholder.com/100x100/00D2D3/FFFFFF?text=☀️", alt: "Sol", theme: "sol", id: "sol-1" },
+        { src: "https://via.placeholder.com/100x100/FF3838/FFFFFF?text=🎵", alt: "Música", theme: "musica", id: "musica-1" },
+        { src: "https://via.placeholder.com/100x100/2ECC40/FFFFFF?text=🌳", alt: "Árbol", theme: "arbol", id: "arbol-1" },
+        { src: "https://via.placeholder.com/100x100/B10DC9/FFFFFF?text=🎨", alt: "Arte", theme: "arte", id: "arte-1" }
+      ];
+      
+      return fallbackImages.slice(0, count);
+    }
+
+    // Función para precargar imágenes
+    function preloadImages(images) {
+      return Promise.all(
+        images.map((img, index) => {
+          return new Promise((resolve, reject) => {
+            const image = new Image();
+            image.onload = resolve;
+            image.onerror = () => {
+              // Si falla, usar imagen de respaldo con colores diferentes
+              const colors = ['FF6B6B', '4ECDC4', '45B7D1', '96CEB4', 'FECA57', 'FF9FF3', '54A0FF', '5F27CD', '00D2D3'];
+              const color = colors[index % colors.length];
+              img.src = `https://via.placeholder.com/100x100/${color}/FFFFFF?text=${index + 1}`;
+              resolve();
+            };
+            image.src = img.src;
+          });
+        })
+      );
+    }
+
+    // Función para iniciar el nivel
+    async function startLevel() {
+      startButton.style.display = "none";
+      startButton.disabled = true;
+      selectedOrder = [];
+      attempts = 2;
+      updateUI();
+      
+      const numImages = 3 + (level - 1);
+      
+      try {
+        // Mostrar loading
+        showLoading(numImages);
+        
+        // Obtener y precargar imágenes
+        currentImages = await fetchImages(numImages);
+        await preloadImages(currentImages);
+        
+        // Mezclar las imágenes para el orden de presentación
+        currentImages.sort(() => 0.5 - Math.random());
+        
+        displayImages();
+      } catch (error) {
+        console.error('Error starting level:', error);
+        errorDiv.textContent = "Error al iniciar el nivel. Inténtalo de nuevo.";
+        startButton.style.display = "inline-block";
+        startButton.disabled = false;
+      }
+    }
+
+    function showLoading(count) {
+      imagesDiv.innerHTML = "";
+      for (let i = 0; i < count; i++) {
+        const div = document.createElement("div");
+        div.classList.add("image-card", "loading");
+        div.textContent = "Cargando...";
+        imagesDiv.appendChild(div);
+      }
+    }
+
+    function displayImages() {
+      imagesDiv.innerHTML = "";
+      selectionDiv.innerHTML = "";
+      checkButton.style.display = "none";
+      result.textContent = "";
+      optionsDiv.classList.add("hidden");
+      countdownDiv.classList.remove("hidden");
+
+      // Mostrar las imágenes
+      currentImages.forEach(img => {
+        const div = document.createElement("div");
+        div.classList.add("image-card");
+        div.innerHTML = `<img src="${img.src}" alt="${img.alt}" loading="lazy">`;
+        imagesDiv.appendChild(div);
+      });
+
+      // Countdown de 5 segundos
+      let timeLeft = 5;
+      countdownDiv.textContent = `Memoriza: ${timeLeft}s`;
+      
+      const countdown = setInterval(() => {
+        timeLeft--;
+        countdownDiv.textContent = `Memoriza: ${timeLeft}s`;
+        
+        if (timeLeft <= 0) {
+          clearInterval(countdown);
+          countdownDiv.classList.add("hidden");
+          imagesDiv.innerHTML = "";
+          prepareSelection();
+        }
+      }, 1000);
+    }
+
+    function prepareSelection() {
+      let shuffledImages = [...currentImages];
+      
+      // Asegurarse de que el orden esté realmente mezclado
+      do {
+        shuffledImages.sort(() => 0.5 - Math.random());
+      } while (JSON.stringify(shuffledImages.map(img => img.id)) === JSON.stringify(currentImages.map(img => img.id)));
+
+      shuffledImages.forEach(img => {
+        const div = document.createElement("div");
+        div.classList.add("image-card");
+        div.innerHTML = `<img src="${img.src}" alt="${img.alt}" loading="lazy">`;
+        div.onclick = () => selectImage(img.id, div);
+        selectionDiv.appendChild(div);
+      });
+
+      checkButton.style.display = "inline-block";
+    }
+
+    function selectImage(id, element) {
+      if (selectedOrder.length < currentImages.length && !element.classList.contains('selected')) {
+        selectedOrder.push(id);
+        element.classList.add('selected');
+      }
+    }
+
+    function checkOrder() {
+      const correctOrder = currentImages.map(img => img.id);
+      
+      if (JSON.stringify(selectedOrder) === JSON.stringify(correctOrder)) {
+        result.textContent = "¡Correcto! 🎉";
+        result.style.color = "#00ff00";
+        level++;
+        
+        setTimeout(() => {
+          startButton.style.display = "inline-block";
+          startButton.disabled = false;
+          startButton.textContent = `Nivel ${level} - Continuar`;
+        }, 2000);
+      } else {
+        attempts--;
+        if (attempts > 0) {
+          result.textContent = `❌ Incorrecto. Te quedan ${attempts} intento(s).`;
+          result.style.color = "#ff0000";
+          resetSelection();
+        } else {
+          result.textContent = "😔 Has perdido. ¡Inténtalo de nuevo!";
+          result.style.color = "#ff0000";
+          optionsDiv.classList.remove("hidden");
+          selectionDiv.innerHTML = "";
+          checkButton.style.display = "none";
+        }
+      }
+      updateUI();
+    }
+
+    function resetSelection() {
+      selectedOrder = [];
+      const cards = selectionDiv.querySelectorAll('.image-card');
+      cards.forEach(card => {
+        card.classList.remove('selected');
+        card.style.pointerEvents = 'auto';
+      });
+    }
+
+    function retryLevel() {
+      level = 1;
+      startButton.textContent = "Iniciar Juego";
+      startButton.style.display = "inline-block";
+      startButton.disabled = false;
+      optionsDiv.classList.add("hidden");
+      result.textContent = "";
+      updateUI();
+    }
+
+    function goToHome() {
+      // En un entorno real, esto redirigiría a index.html
+      alert("Redirigiendo a la página principal...");
+      window.location.reload();
+    }
+
+    function updateUI() {
+      levelSpan.textContent = level;
+      attemptsSpan.textContent = attempts;
+    }
+
+    // Inicializar el juego
+    updateUI();
+  </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Completa la Frase</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Estilos visuales */
+    button.selected {
+      background-color: #4CAF50; /* Verde cuando la palabra es seleccionada correctamente */
+    }
+    button.incorrect {
+      background-color: #f44336; /* Rojo cuando la palabra es incorrecta */
+    }
+    button {
+      margin: 5px;
+      padding: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Completa la Frase</h2>
+  <p id="instruction">Haz clic en "Iniciar" para comenzar el juego.</p>
+  <button id="startButton" onclick="startGame()">Iniciar</button>
+
+  <div id="game" style="display: none;">
+    <p id="question" style="font-size: 20px;"></p>
+    <div id="options"></div>
+    <p id="result"></p>
+    <p id="timer">Tiempo: 10s</p>
+    <div id="attempts">Intentos restantes: 2</div>
+    <div id="level">Nivel: 1</div>
+    <div id="game-over" style="display: none;">
+      <button onclick="restartLevel()">Intentar de nuevo</button>
+      <button onclick="goToIndex()">Ir a la página principal</button>
+    </div>
+    <div id="game-complete" style="display: none;">
+      <button onclick="goToIndex()">Ir a la página principal</button>
+    </div>
+  </div>
+
+  <script>
+    const phrases = [
+      { question: "El ___ es muy ___", correctAnswer: ["cielo", "azul"], options: ["rojo", "amarillo", "azul", "verde", "cielo", "flor"] },
+      { question: "Las ___ corren ___", correctAnswer: ["gatas", "rápido"], options: ["gatas", "lentas", "rápido", "rojas"] },
+      { question: "La ___ está ___", correctAnswer: ["flor", "roja"], options: ["roja", "verde", "cielo", "flor"] },
+      { question: "El ___ está sobre la ___", correctAnswer: ["gato", "mesa"], options: ["gato", "cielo", "mesa", "flor"] },
+      { question: "El ___ va por ___", correctAnswer: ["perro", "el campo"], options: ["perro", "rojo", "el campo", "flor"] },
+      { question: "Los ___ se encuentran ___", correctAnswer: ["niños", "en el parque"], options: ["niños", "perro", "flor", "en el parque"] },
+      { question: "El ___ voló hacia ___", correctAnswer: ["pájaro", "el árbol"], options: ["pájaro", "rojo", "el árbol", "flor"] },
+      { question: "El ___ nadó en ___", correctAnswer: ["pez", "el agua"], options: ["pez", "rojo", "el agua", "mesa"] },
+      { question: "La ___ es ___", correctAnswer: ["flor", "hermosa"], options: ["flor", "cielo", "hermosa", "verde"] },
+      { question: "La ___ es tan ___", correctAnswer: ["luz", "brillante"], options: ["luz", "rojo", "brillante", "verde"] },
+    ];
+
+    let currentLevel = 0;
+    let attempts = 2;
+    let timer;
+    let timeLeft = 10;
+
+    function startGame() {
+      document.getElementById("startButton").style.display = "none";
+      document.getElementById("instruction").style.display = "none";
+      document.getElementById("game").style.display = "block";
+      currentLevel = 0;
+      startLevel();
+    }
+
+    function startLevel() {
+      if (currentLevel < phrases.length) {
+        attempts = 2;
+        timeLeft = 10;
+        updateUI();
+        setupLevel();
+        startTimer();
+      } else {
+        document.getElementById("game-complete").style.display = "block";
+        document.getElementById("game").style.display = "none";
+      }
+    }
+
+    function updateUI() {
+      document.getElementById("attempts").textContent = `Intentos restantes: ${attempts}`;
+      document.getElementById("level").textContent = `Nivel: ${currentLevel + 1}`;
+      document.getElementById("game-over").style.display = "none";
+      document.getElementById("game-complete").style.display = "none";
+    }
+
+    function setupLevel() {
+      const phrase = phrases[currentLevel];
+      document.getElementById("question").textContent = phrase.question;
+      document.getElementById("options").innerHTML = "";
+      
+      phrase.options.forEach(option => {
+        const button = document.createElement("button");
+        button.textContent = option;
+        button.style.margin = "5px";
+        button.onclick = () => checkAnswer(option, phrase.correctAnswer, button);
+        document.getElementById("options").appendChild(button);
+      });
+    }
+
+    function checkAnswer(selected, correctAnswer, button) {
+      button.disabled = true;
+      if (correctAnswer.includes(selected)) {
+        const index = correctAnswer.indexOf(selected);
+        correctAnswer.splice(index, 1); // Eliminar la palabra correcta seleccionada
+        button.classList.add("selected");
+        if (correctAnswer.length === 0) {
+          currentLevel++;
+          setTimeout(() => startLevel(), 1000);
+          resetTimer();
+        }
+      } else {
+        button.classList.add("incorrect");
+        attempts--;
+        if (attempts <= 0) {
+          showGameOver();
+        } else {
+          alert("Incorrecto. Intenta de nuevo.");
+        }
+      }
+    }
+
+    function startTimer() {
+      // Asegurarse de que no haya múltiples intervalos
+      clearInterval(timer);
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").textContent = `Tiempo: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          attempts--;
+          if (attempts <= 0) {
+            showGameOver();
+          } else {
+            alert("Se acabó el tiempo. Intenta de nuevo.");
+            resetTimer();
+          }
+        }
+      }, 1000);
+    }
+
+    function resetTimer() {
+      timeLeft = 10;
+      clearInterval(timer);  // Limpiar cualquier intervalo pendiente
+      startTimer(); // Reiniciar el temporizador
+    }
+
+    function showGameOver() {
+      document.getElementById("game-over").style.display = "block";
+      document.getElementById("question").textContent = "Juego terminado. ¡Perdiste!";
+    }
+
+    function restartLevel() {
+      currentLevel = 0;
+      startGame();
+    }
+
+    function goToIndex() {
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

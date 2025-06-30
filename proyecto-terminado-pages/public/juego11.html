@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detecta la Letra</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    #letters span {
+      margin: 5px;
+      cursor: pointer;
+    }
+    #timer {
+      font-size: 20px;
+      color: #e1bee7;
+    }
+    .button-container {
+      margin-top: 20px;
+    }
+    .button-container button {
+      background-color: #6a0dad;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .button-container button:hover {
+      background-color: #ab47bc;
+    }
+    #game-container {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>Detecta la Letra</h2>
+  <button onclick="startGame()">Iniciar Juego</button>
+
+  <div id="game-container">
+    <p>Haz clic en la letra indicada dentro del tiempo.</p>
+    <div id="letters" style="font-size: 24px; margin: 10px;"></div>
+    <p id="score">Puntuación: 0</p>
+    <p id="level">Nivel: 1</p>
+    <p id="instruction"></p>
+    <p id="timer"></p>
+    <div class="button-container" id="button-container" style="display: none;">
+      <button onclick="retryLevel()">Intentar de nuevo</button>
+      <button onclick="goToMainPage()">Ir a la página principal</button>
+    </div>
+  </div>
+
+  <script>
+    let score = 0;
+    let level = 1;
+    let currentLetter = '';
+    let maxAttempts = 2;
+    let attempts = 0;
+    let timer;
+    let remainingTime = 10; // 10 segundos por nivel
+
+    const texts = [
+      "La casa es grande", // Nivel 1
+      "El perro corre rápido en el parque", // Nivel 2
+      "Las flores crecen en primavera cerca del río", // Nivel 3
+      "El sol brilla en el cielo claro", // Nivel 4
+      "La luna ilumina la noche oscura", // Nivel 5
+      "Las aves vuelan alto en el cielo", // Nivel 6
+      "El viento mueve las hojas de los árboles", // Nivel 7
+      "Las estrellas son visibles cuando está oscuro", // Nivel 8
+      "El mar es grande y está lleno de vida", // Nivel 9
+      "La tierra gira alrededor del sol en el espacio" // Nivel 10
+    ];
+
+    function startGame() {
+      document.querySelector('button').style.display = 'none'; // Ocultar el botón de inicio
+      document.getElementById("game-container").style.display = 'block'; // Mostrar el juego
+      displayText();
+    }
+
+    function displayText() {
+      const text = texts[level - 1];
+      const lettersDiv = document.getElementById("letters");
+      lettersDiv.innerHTML = '';
+      const instruction = document.getElementById("instruction");
+      currentLetter = getRandomLetter(text);
+      instruction.textContent = `Selecciona la letra: ${currentLetter}`;
+
+      // Iniciar el cronómetro
+      startTimer();
+
+      for (let i = 0; i < text.length; i++) {
+        const span = document.createElement("span");
+        span.textContent = text[i];
+        span.onclick = () => handleLetterClick(span, text[i]);
+        lettersDiv.appendChild(span);
+      }
+    }
+
+    function getRandomLetter(text) {
+      const letterSet = new Set(text.split('').filter(c => c.match(/[a-zA-ZáéíóúÁÉÍÓÚ]/))); // Incluye caracteres con acentos
+      const randomIndex = Math.floor(Math.random() * letterSet.size);
+      return [...letterSet][randomIndex];
+    }
+
+    function startTimer() {
+      remainingTime = 10;
+      const timerElement = document.getElementById("timer");
+      timerElement.textContent = `Tiempo restante: ${remainingTime} segundos`;
+      
+      timer = setInterval(() => {
+        remainingTime--;
+        timerElement.textContent = `Tiempo restante: ${remainingTime} segundos`;
+        if (remainingTime <= 0) {
+          clearInterval(timer);
+          alert("¡Se acabó el tiempo! Has perdido el nivel.");
+          attempts = 0;
+          displayText();
+        }
+      }, 1000);
+    }
+
+    function handleLetterClick(span, letter) {
+      if (span.textContent.toLowerCase() === currentLetter.toLowerCase()) {
+        span.style.backgroundColor = "green";
+        score++;
+        document.getElementById("score").textContent = `Puntuación: ${score}`;
+      } else {
+        span.style.backgroundColor = "red";
+        attempts++;
+        if (attempts >= maxAttempts) {
+          clearInterval(timer);
+          showRetryOptions();
+          return;
+        } else {
+          alert("¡Incorrecto! Intenta con otra letra.");
+        }
+      }
+
+      // Comprobar si ha ganado el nivel
+      const text = texts[level - 1];
+      if (score === countLetterOccurrences(text, currentLetter)) {
+        clearInterval(timer);
+        level++;
+        if (level <= texts.length) {
+          displayText();
+        } else {
+          alert("¡Ganaste el juego!");
+        }
+      }
+    }
+
+    function countLetterOccurrences(text, letter) {
+      // Cuenta todas las apariciones de la letra, sin importar mayúsculas/minúsculas o acentos
+      return text.split('').filter(l => l.toLowerCase() === letter.toLowerCase()).length;
+    }
+
+    function showRetryOptions() {
+      const buttonContainer = document.getElementById("button-container");
+      buttonContainer.style.display = "block";
+    }
+
+    function retryLevel() {
+      attempts = 0;
+      score = 0;
+      document.getElementById("score").textContent = `Puntuación: ${score}`;
+      document.getElementById("button-container").style.display = "none";
+      displayText();
+    }
+
+    function goToMainPage() {
+      window.location.href = "index.html"; // Cambia la ruta según la ubicación de tu archivo principal
+    }
+  </script>
+</body>
+</html>

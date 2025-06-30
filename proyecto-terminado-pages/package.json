@@ -1,0 +1,22 @@
+{
+  "name": "mental-health-chat-app",
+  "version": "1.0.0",
+  "description": "A mental health support chat application that allows users to send their concerns, managed by DeepSeek.",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "axios": "^0.21.4",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "keywords": []
+}

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sinónimos</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background-color: #2e003e;
+      color: white;
+    }
+    button {
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ab47bc;
+    }
+    .hidden {
+      display: none;
+    }
+    #timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Sinónimos</h2>
+  <p>Selecciona el sinónimo de la palabra mostrada.</p>
+  <p id="question"></p>
+  <div id="options"></div>
+  <p id="timer">Tiempo restante: <span id="time"></span></p>
+  <p id="result"></p>
+  <button id="restartBtn" class="hidden" onclick="startGame()">Reiniciar Juego</button>
+
+  <script>
+    let level = 1;
+    let timer;
+    let timeLeft = 10;
+    const questions = [
+      { word: 'feliz', options: ['contento', 'triste', 'llorar'], correct: 'contento' },
+      { word: 'grande', options: ['enorme', 'pequeño', 'gigante'], correct: 'enorme' },
+      { word: 'rápido', options: ['lento', 'veloz', 'quieto'], correct: 'veloz' },
+      { word: 'calor', options: ['tibio', 'frío', 'ardor'], correct: 'tibio' },
+      { word: 'inteligente', options: ['sabio', 'tonto', 'instruido'], correct: 'sabio' },
+      { word: 'fácil', options: ['dificultoso', 'sencillo', 'pesado'], correct: 'sencillo' },
+      { word: 'rico', options: ['pobre', 'sabroso', 'amargo'], correct: 'sabroso' },
+      { word: 'luz', options: ['brillante', 'oscura', 'débil'], correct: 'brillante' },
+      { word: 'grande', options: ['pequeño', 'gigante', 'enorme'], correct: 'gigante' },
+      { word: 'oscuro', options: ['claro', 'brillante', 'opaco'], correct: 'opaco' }
+    ];
+    const questionDiv = document.getElementById('question');
+    const optionsDiv = document.getElementById('options');
+    const resultDiv = document.getElementById('result');
+    const timeDiv = document.getElementById('time');
+    const restartBtn = document.getElementById('restartBtn');
+
+    function startGame() {
+      level = 1;
+      restartBtn.classList.add('hidden');
+      nextLevel();
+    }
+
+    function nextLevel() {
+      if (level > questions.length) {
+        resultDiv.textContent = "¡Felicidades! Has completado todos los niveles.";
+        restartBtn.classList.remove('hidden');
+        return;
+      }
+
+      const currentQuestion = questions[level - 1];
+      questionDiv.textContent = `¿Cuál es el sinónimo de: "${currentQuestion.word}"?`;
+      optionsDiv.innerHTML = '';
+      currentQuestion.options.forEach(option => {
+        const button = document.createElement("button");
+        button.textContent = option;
+        button.onclick = () => checkAnswer(option, currentQuestion.correct);
+        optionsDiv.appendChild(button);
+      });
+
+      startTimer();
+    }
+
+    function checkAnswer(selected, correct) {
+      clearInterval(timer);
+      if (selected === correct) {
+        resultDiv.textContent = "¡Correcto!";
+        level++;
+        setTimeout(nextLevel, 2000);
+      } else {
+        resultDiv.textContent = "Incorrecto. Intenta de nuevo.";
+        restartBtn.classList.remove('hidden');
+      }
+    }
+
+    function startTimer() {
+      timeLeft = 10;
+      timeDiv.textContent = timeLeft;
+      timer = setInterval(() => {
+        timeLeft--;
+        timeDiv.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          resultDiv.textContent = "¡Se acabó el tiempo!";
+          restartBtn.classList.remove('hidden');
+        }
+      }, 1000);
+    }
+
+    startGame();
+  </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursos de Ayuda - Cuida Tu Mente</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Copia aquí el bloque <style> de tu index.html para mantener el diseño */
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f8f3ff 0%, #fff5f8 50%, #f0f8ff 100%);
+            color: #4a4a4a;
+            min-height: 100vh;
+        }
+        .floating-shapes { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .shape { position: absolute; border-radius: 50%; opacity: 0.08; animation: float 25s infinite ease-in-out; }
+        .shape:nth-child(1) { width: 300px; height: 300px; background: linear-gradient(45deg, #c7b8ea, #a8d8ea); top: 5%; left: 5%; animation-delay: 0s; }
+        .shape:nth-child(2) { width: 200px; height: 200px; background: linear-gradient(45deg, #ffb3d9, #d4b3ff); top: 50%; right: 10%; animation-delay: 8s; }
+        .shape:nth-child(3) { width: 150px; height: 150px; background: linear-gradient(45deg, #a8d8ea, #FFD700); bottom: 15%; left: 15%; animation-delay: 16s; }
+        .shape:nth-child(4) { width: 120px; height: 120px; background: linear-gradient(45deg, #d4b3ff, #FFB6C1); top: 25%; right: 25%; animation-delay: 24s; }
+        @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); } 25% { transform: translateY(-30px) rotate(90deg) scale(1.1); } 50% { transform: translateY(-60px) rotate(180deg) scale(0.9); } 75% { transform: translateY(-30px) rotate(270deg) scale(1.05); } }
+        .content-wrapper { position: relative; z-index: 2; }
+        header { padding: 15px 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(199, 184, 234, 0.2); position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 20px rgba(139, 122, 184, 0.1); }
+        .navbar-brand { font-size: 2rem; font-weight: bold; color: #8b7ab8 !important; text-shadow: 2px 2px 4px rgba(139, 122, 184, 0.2); }
+        .navbar-nav .nav-link { color: #6b5b95 !important; font-weight: 500; transition: all 0.3s ease; padding: 10px 15px !important; border-radius: 25px; margin: 0 5px; position: relative; overflow: hidden; }
+        .navbar-nav .nav-link:hover { background: rgba(199, 184, 234, 0.2); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(199, 184, 234, 0.3); }
+        .emergency-section { background: linear-gradient(135deg, rgba(255, 179, 217, 0.2), rgba(212, 179, 255, 0.2)); padding: 50px; border-radius: 30px; text-align: center; margin: 60px 0; border: 2px solid rgba(255, 179, 217, 0.3); box-shadow: 0 15px 40px rgba(255, 179, 217, 0.2); }
+        .emergency-title { color: #d63384; font-size: 1.8rem; margin-bottom: 25px; font-weight: bold; }
+        .emergency-number { font-size: 2.2rem; color: #6b5b95; font-weight: bold; margin: 15px 0; padding: 20px; background: rgba(255, 255, 255, 0.7); border-radius: 20px; transition: all 0.3s ease; }
+        .emergency-number:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(107, 91, 149, 0.2); }
+        footer { background: linear-gradient(135deg, rgba(107, 91, 149, 0.1), rgba(139, 122, 184, 0.1)); padding: 50px 0; text-align: center; color: #6b5b95; border-top: 1px solid rgba(199, 184, 234, 0.3); margin-top: 80px; }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <div class="content-wrapper">
+        <header>
+            <nav class="navbar navbar-expand-lg">
+                <div class="container">
+                    <a class="navbar-brand" href="index.html">
+                        <i class="fas fa-heart"></i> Cuida Tu Mente
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                            <li class="nav-item"><a class="nav-link" href="salud-mental.html">¿Qué es?</a></li>
+                            <li class="nav-item"><a class="nav-link" href="autocuidado.html">Autocuidado</a></li>
+                            <li class="nav-item"><a class="nav-link" href="test.html">Test</a></li>
+                            <li class="nav-item"><a class="nav-link active" href="recursos.html">Recursos</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <main>
+            <section class="emergency-section">
+                <div class="container">
+                    <div class="emergency-title">
+                        <i class="fas fa-exclamation-triangle"></i> ¿Necesitas ayuda inmediata?
+                    </div>
+                    <p>Si estás pasando por una crisis emocional, no estás solo. Estas líneas están disponibles 24/7:</p>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="emergency-number">
+                                <i class="fas fa-phone"></i> SAPTEL<br>
+                                <span style="font-size: 1.5rem;">800 472 7835</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="emergency-number">
+                                <i class="fas fa-phone"></i> Línea de la Vida<br>
+                                <span style="font-size: 1.5rem;">800 911 2000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer>
+            <div class="container">
+                <p>&copy; 2025 Cuida Tu Mente. Comprometidos con tu bienestar mental.</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

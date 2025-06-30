@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoy Agradezco - Cuida Tu Mente</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* === ESTILO BASE CUIDA TU MENTE === */
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f8f3ff 0%, #fff5f8 50%, #f0f8ff 100%);
+            color: #4a4a4a;
+            min-height: 100vh;
+        }
+
+        /* Formas flotantes animadas */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            background: #c7b8ea;
+            top: 10%;
+            left: 10%;
+        }
+
+        .shape:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            background: #ffb3d9;
+            top: 60%;
+            right: 15%;
+            animation-delay: 5s;
+        }
+
+        .shape:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            background: #a8d8ea;
+            top: 30%;
+            right: 30%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-40px) rotate(180deg); }
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(199, 184, 234, 0.3);
+        }
+
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #8b7ab8 !important;
+        }
+
+        .navbar-nav .nav-link {
+            color: #6b5b95 !important;
+            font-weight: 500;
+            padding: 10px 15px !important;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            background: rgba(199, 184, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Títulos principales */
+        .main-title {
+            font-size: 3rem;
+            color: #8b7ab8;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #6b5b95;
+            text-align: center;
+            line-height: 1.6;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Contenedores principales */
+        .main-container {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 20px 40px rgba(199, 184, 234, 0.2);
+        }
+
+        /* Sección de preguntas orientadoras */
+        .questions-section {
+            background: rgba(199, 184, 234, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .question-item {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+        }
+
+        .question-item:hover {
+            background: rgba(255, 255, 255, 0.8);
+            border-left-color: #c7b8ea;
+            transform: translateX(5px);
+        }
+
+        .question-text {
+            color: #6b5b95;
+            font-size: 1rem;
+            margin: 0;
+            font-style: italic;
+        }
+
+        /* Área de escritura */
+        .writing-area {
+            position: relative;
+        }
+
+        .gratitude-textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 25px;
+            border: 2px solid rgba(199, 184, 234, 0.3);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            font-family: 'Georgia', serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #4a4a4a;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .gratitude-textarea:focus {
+            outline: none;
+            border-color: #c7b8ea;
+            box-shadow: 0 0 20px rgba(199, 184, 234, 0.3);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .gratitude-textarea::placeholder {
+            color: #a8a8a8;
+            font-style: italic;
+        }
+
+        /* Botones */
+        .cta-button {
+            background: linear-gradient(45deg, #c7b8ea, #ffb3d9);
+            color: white;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(199, 184, 234, 0.4);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(199, 184, 234, 0.6);
+            color: white;
+            text-decoration: none;
+        }
+
+        .secondary-button {
+            background: rgba(255, 255, 255, 0.8);
+            color: #6b5b95;
+            padding: 12px 30px;
+            border: 2px solid rgba(199, 184, 234, 0.5);
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .secondary-button:hover {
+            background: rgba(199, 184, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Mensaje de finalización */
+        .completion-message {
+            background: rgba(168, 216, 234, 0.2);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid rgba(168, 216, 234, 0.3);
+            display: none;
+            margin-top: 30px;
+        }
+
+        .completion-title {
+            color: #5a9fd4;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .completion-text {
+            color: #4a4a4a;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* Contador de palabras */
+        .word-counter {
+            text-align: right;
+            color: #a8a8a8;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* Animaciones */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(107, 91, 149, 0.1);
+            padding: 40px 0;
+            text-align: center;
+            color: #6b5b95;
+            border-top: 1px solid rgba(199, 184, 234, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- Header -->
+        <header>
+            <nav class="navbar navbar-expand-lg">
+                <div class="container">
+                    <a class="navbar-brand" href="index.html">
+                        <i class="fas fa-heart"></i> Cuida Tu Mente
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.html">Inicio</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#que-es">¿Qué es?</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#autocuidado">Autocuidado</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="test.html">Test</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#recursos">Recursos</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Contenido principal -->
+        <main class="container py-5">
+            <h1 class="main-title fade-in">
+                <i class="fas fa-sun"></i>
+                Hoy agradezco
+            </h1>
+            <p class="subtitle fade-in">
+                En el ritmo acelerado de la vida, a veces olvidamos detenernos a reconocer lo bueno que nos rodea. 
+                Escribir sobre lo que agradecemos no solo nos ayuda a valorar lo que tenemos, sino que también 
+                nutre nuestro corazón y nos conecta con momentos de paz y bienestar. Este es tu espacio para 
+                reflexionar, respirar y recordar que siempre hay algo por lo cual sentir gratitud.
+            </p>
+
+            <div class="main-container">
+                <!-- Preguntas orientadoras -->
+                <div class="questions-section">
+                    <h3 style="color: #6b5b95; text-align: center; margin-bottom: 25px;">
+                        <i class="fas fa-lightbulb"></i> Para inspirarte
+                    </h3>
+                    <p style="text-align: center; color: #6b5b95; margin-bottom: 20px; font-style: italic;">
+                        Puedes usar estas preguntas como guía o simplemente escribir lo que sientes:
+                    </p>
+                    
+                    <div class="question-item" onclick="insertQuestion(this)">
+                        <p class="question-text">¿Qué persona hizo que mi día fuera un poco mejor hoy?</p>
+                    </div>
+                    
+                    <div class="question-item" onclick="insertQuestion(this)">
+                        <p class="question-text">¿Qué momento de hoy me hizo sonreír, aunque haya sido pequeño?</p>
+                    </div>
+                    
+                    <div class="question-item" onclick="insertQuestion(this)">
+                        <p class="question-text">¿Qué parte de mi cuerpo agradezco por todo lo que me permite hacer?</p>
+                    </div>
+                    
+                    <div class="question-item" onclick="insertQuestion(this)">
+                        <p class="question-text">¿Qué lugar me da paz y tranquilidad?</p>
+                    </div>
+                    
+                    <div class="question-item" onclick="insertQuestion(this)">
+                        <p class="question-text">¿Qué aprendizaje o experiencia reciente valoro, incluso si fue difícil?</p>
+                    </div>
+                </div>
+
+                <!-- Área de escritura -->
+                <div class="writing-area">
+                    <textarea 
+                        class="gratitude-textarea" 
+                        id="gratitudeText"
+                        placeholder="Comienza escribiendo aquello por lo que te sientes agradecido/a hoy. No hay respuestas correctas o incorrectas, solo tu verdad del momento..."
+                        oninput="updateWordCount()"
+                    ></textarea>
+                    <div class="word-counter" id="wordCounter">0 palabras</div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="text-center mt-4">
+                    <button class="secondary-button" onclick="clearText()">
+                        <i class="fas fa-refresh"></i> Empezar de nuevo
+                    </button>
+                    <button class="cta-button" onclick="completeGratitude()">
+                        <i class="fas fa-heart"></i> Terminar mi reflexión
+                    </button>
+                </div>
+
+                <!-- Mensaje de finalización -->
+                <div class="completion-message" id="completionMessage">
+                    <div class="completion-title" id="completionTitle">
+                        <i class="fas fa-star"></i> ¡Hermoso!
+                    </div>
+                    <p class="completion-text" id="completionText">
+                        Tomarte este tiempo para reflexionar sobre la gratitud es un regalo que te das a ti mismo. 
+                        Cada palabra que escribiste es una semilla de bienestar que crecerá en tu corazón.
+                    </p>
+                    <button class="cta-button mt-3" onclick="startNew()">
+                        <i class="fas fa-plus"></i> Escribir otra reflexión
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="container">
+                <p>&copy; 2025 Cuida Tu Mente. Comprometidos con tu bienestar mental.</p>
+                <p style="font-size: 0.9rem; margin-top: 10px; opacity: 0.8;">
+                    <i class="fas fa-heart" style="color: #ffb3d9;"></i> 
+                    Cada momento de gratitud cuenta
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Mensajes de finalización variados
+        const completionMessages = [
+            {
+                title: "¡Hermoso!",
+                text: "Tomarte este tiempo para reflexionar sobre la gratitud es un regalo que te das a ti mismo. Cada palabra que escribiste es una semilla de bienestar que crecerá en tu corazón."
+            },
+            {
+                title: "¡Qué inspirador!",
+                text: "Has creado un momento de pausa y reconocimiento en tu día. La gratitud que acabas de expresar es como una luz suave que ilumina lo bueno de tu vida."
+            },
+            {
+                title: "¡Precioso!",
+                text: "Reconocer lo que agradeces es un acto de amor propio y hacia la vida. Has plantado una semilla de positividad que florecerá cada vez que recuerdes este momento."
+            }
+        ];
+
+        // Función para insertar pregunta en el textarea
+        function insertQuestion(element) {
+            const question = element.querySelector('.question-text').textContent;
+            const textarea = document.getElementById('gratitudeText');
+            const currentText = textarea.value;
+            
+            if (currentText.trim() === '') {
+                textarea.value = question + '\n\n';
+            } else {
+                textarea.value = currentText + '\n\n' + question + '\n\n';
+            }
+            
+            textarea.focus();
+            updateWordCount();
+            
+            // Efecto visual
+            element.style.background = 'rgba(199, 184, 234, 0.3)';
+            setTimeout(() => {
+                element.style.background = 'rgba(255, 255, 255, 0.6)';
+            }, 500);
+        }
+
+        // Función para contar palabras
+        function updateWordCount() {
+            const textarea = document.getElementById('gratitudeText');
+            const words = textarea.value.trim().split(/\s+/).filter(word => word.length > 0);
+            const wordCount = textarea.value.trim() === '' ? 0 : words.length;
+            document.getElementById('wordCounter').textContent = wordCount + ' palabras';
+        }
+
+        // Función para limpiar texto
+        function clearText() {
+            if (confirm('¿Estás seguro/a de que quieres empezar de nuevo? Se borrará todo lo que has escrito.')) {
+                document.getElementById('gratitudeText').value = '';
+                updateWordCount();
+                document.getElementById('completionMessage').style.display = 'none';
+            }
+        }
+
+        // Función para completar la reflexión
+        function completeGratitude() {
+            const textarea = document.getElementById('gratitudeText');
+            const text = textarea.value.trim();
+            
+            if (text.length < 10) {
+                alert('Te animamos a escribir un poco más sobre lo que agradeces. No hay prisa, tómate tu tiempo.');
+                return;
+            }
+            
+            // Mostrar mensaje aleatorio
+            const randomMessage = completionMessages[Math.floor(Math.random() * completionMessages.length)];
+            document.getElementById('completionTitle').innerHTML = 
+                '<i class="fas fa-star"></i> ' + randomMessage.title;
+            document.getElementById('completionText').textContent = randomMessage.text;
+            
+            // Mostrar el mensaje con animación
+            const completionDiv = document.getElementById('completionMessage');
+            completionDiv.style.display = 'block';
+            completionDiv.classList.add('fade-in');
+            
+            // Scroll suave hacia el mensaje
+            completionDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Deshabilitar textarea temporalmente
+            textarea.disabled = true;
+            setTimeout(() => {
+                textarea.disabled = false;
+            }, 3000);
+        }
+
+        // Función para empezar nueva reflexión
+        function startNew() {
+            document.getElementById('gratitudeText').value = '';
+            document.getElementById('completionMessage').style.display = 'none';
+            updateWordCount();
+            document.getElementById('gratitudeText').focus();
+            
+            // Scroll hacia arriba
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Auto-guardado local (opcional)
+        setInterval(() => {
+            const text = document.getElementById('gratitudeText').value;
+            if (text.trim().length > 0) {
+                // Guardado en memoria durante la sesión
+                sessionStorage.setItem('gratitudeText', text);
+            }
+        }, 30000);
+
+        // Recuperar texto al cargar
+        window.addEventListener('load', () => {
+            const savedText = sessionStorage.getItem('gratitudeText');
+            if (savedText) {
+                document.getElementById('gratitudeText').value = savedText;
+                updateWordCount();
+            }
+        });
+    </script>
+</body>
+</html>
